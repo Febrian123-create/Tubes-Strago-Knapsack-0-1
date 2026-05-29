@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knapsack Solver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 700px;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="number"], input[type="text"] {
+            padding: 8px;
+            margin: 5px 0;
+            width: 95%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .result {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .result h3 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h2>Knapsack Input (8 Item)</h2>
+    <form method="POST">
+        <label>Capacity:</label><br>
+        <input type="number" name="capacity" required><br><br>
+
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>Nama</th>
+                <th>Profit</th>
+                <th>Weight</th>
+            </tr>
+            {% for i in range(1,9) %}
+            <tr>
+                <td><input type="text" name="name{{i}}" required></td>
+                <td><input type="number" name="profit{{i}}" required></td>
+                <td><input type="number" name="weight{{i}}" required></td>
+            </tr>
+            {% endfor %}
+        </table><br>
+
+        <button type="submit">Solve</button>
+    </form>
+
+    {% if sorted_items %}
+    <div class="result">
+        <h3>Sorted Items:</h3>
+        <ul>
+        {% for item in sorted_items %}
+            <li>{{ item.name }} - Profit: {{ item.profit }}, Weight: {{ item.weight }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if output %}
+    <div class="result">
+        <h3>Solution:</h3>
+        <p>{{ output }}</p>
+    </div>
+    {% endif %}
+
+    {% if statistics %}
+    <div class="result">
+        <h3>Statistics:</h3>
+        <p>{{ statistics }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>

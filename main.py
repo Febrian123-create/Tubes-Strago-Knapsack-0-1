@@ -1,23 +1,55 @@
-from KnapsackCLI import KnapsackCLI
+from flask import Flask, render_template, request
 from KnapsackSolver import KnapsackSolver
 
+app = Flask(__name__)
 
-def main() -> None:
-    cli = KnapsackCLI()
+@app.route("/", methods=["GET", "POST"])
+def home():
+    output = None
+    sorted_items = None
+    statistics = None
 
-    items, capacity = cli.read_items_and_capacity()
+    if request.method == "POST":
+        capacity = int(request.form["capacity"])
 
-    solver = KnapsackSolver(items, capacity)
+        # Ambil 8 item dari form
+        items = []
+        for i in range(1, 9):
+            name = request.form.get(f"name{i}")
+            profit = request.form.get(f"profit{i}")
+            weight = request.form.get(f"weight{i}")
+            if name and profit and weight:
+                items.append({
+                    "name": name,
+                    "profit": int(profit),
+                    "weight": int(weight)
+                })
 
-    cli.print_sorted_items(solver.items)
-    print(f"\n  Kapasitas Knapsack (W) = {capacity}\n")
 
-    print("  Menjalankan Backtracking + Branch & Bound ...\n")
-    solver.solve()
+        # Konversi list of dict menjadi list of Item
+        from Item import Item
+        items = [Item(i, item["name"], item["weight"], item["profit"]) for i, item in enumerate(items)]
+        solver = KnapsackSolver(items, capacity)
+        solver.solve()
 
-    cli.print_solution(solver)
-    cli.print_statistics(solver)
+        sorted_items = [
+            {
+                "name": item.name,
+                "profit": item.profit,
+                "weight": item.weight
+            }
+            for item in solver.items
+        ]
+        output = {
+            "best_profit": solver.best_profit,
+            "best_items": solver.best_items
+        }
+        statistics = f"Node count: {solver.node_count}, Time: {solver.elapsed_ms:.2f} ms"
 
+    return render_template("index.html",
+                           output=output,
+                           sorted_items=sorted_items,
+                           statistics=statistics)
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
