@@ -109,8 +109,15 @@
 
     {% if output %}
     <div class="result">
-        <h3>Solution:</h3>
-        <p>{{ output }}</p>
+        <h3>Solusi Optimal:</h3>
+        <table>
+            <tr><th>Nama</th><th>Berat</th><th>Profit</th></tr>
+            {% for item in output.selected %}
+            <tr><td>{{ item.name }}</td><td>{{ item.weight }}</td><td>{{ item.profit }}</td></tr>
+            {% endfor %}
+            <tr><td><b>TOTAL</b></td><td><b>{{ output.total_weight }}</b></td><td><b>{{ output.total_profit }}</b></td></tr>
+        </table>
+        <p>Sisa kapasitas: {{ output.remaining }}</p>
     </div>
     {% endif %}
 

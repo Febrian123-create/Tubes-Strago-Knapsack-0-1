@@ -33,18 +33,20 @@ def home():
         solver.solve()
 
         sorted_items = [
-            {
-                "name": item.name,
-                "profit": item.profit,
-                "weight": item.weight
-            }
+            {"name": item.name, "profit": item.profit, "weight": item.weight}
             for item in solver.items
         ]
+        selected = [solver.items[i] for i in solver.best_items]
         output = {
-            "best_profit": solver.best_profit,
-            "best_items": solver.best_items
+            "selected": [
+                {"name": it.name, "weight": it.weight, "profit": it.profit}
+                for it in selected
+            ],
+            "total_weight": sum(it.weight for it in selected),
+            "total_profit": solver.best_profit,
+            "remaining":    capacity - sum(it.weight for it in selected),
         }
-        statistics = f"Node count: {solver.node_count}, Time: {solver.elapsed_ms:.2f} ms"
+        statistics = f"Node dikunjungi: {solver.node_count} | Waktu: {solver.elapsed_ms:.3f} ms"
 
     return render_template("index.html",
                            output=output,
