@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
     <title>Knapsack Solver</title>
@@ -9,44 +9,55 @@
             margin: 0;
             padding: 20px;
         }
+
         h2 {
             color: #2c3e50;
             text-align: center;
         }
+
         form {
             background: #ffffff;
             padding: 20px;
             border-radius: 8px;
             max-width: 700px;
             margin: auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         label {
             font-weight: bold;
         }
-        input[type="number"], input[type="text"] {
+
+        input[type="number"],
+        input[type="text"] {
             padding: 8px;
             margin: 5px 0;
             width: 95%;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: center;
         }
+
         th {
             background: #3498db;
             color: white;
         }
+
         tr:nth-child(even) {
             background: #f9f9f9;
         }
+
         button {
             background: #3498db;
             color: white;
@@ -57,9 +68,11 @@
             font-size: 16px;
             margin-top: 15px;
         }
+
         button:hover {
             background: #2980b9;
         }
+
         .result {
             max-width: 700px;
             margin: 20px auto;
@@ -67,16 +80,21 @@
             padding: 15px;
             border-radius: 8px;
         }
+
         .result h3 {
             color: #2c3e50;
         }
     </style>
 </head>
+
 <body>
-    <h2>Knapsack Input (8 Item)</h2>
+    <h2>Knapsack Solver</h2>
     <form method="POST">
-        <label>Capacity:</label><br>
-        <input type="number" name="capacity" required><br><br>
+        <label>Jumlah Item:</label><br />
+        <input type="number" id="itemCount" name="itemCount" min="8" value="8" required /><br /><br />
+
+        <label>Capacity:</label><br />
+        <input type="number" name="capacity" required /><br /><br />
 
         <table border="1" cellpadding="5">
             <tr>
@@ -84,48 +102,95 @@
                 <th>Profit</th>
                 <th>Weight</th>
             </tr>
-            {% for i in range(1,9) %}
-            <tr>
-                <td><input type="text" name="name{{i}}" required></td>
-                <td><input type="number" name="profit{{i}}" required></td>
-                <td><input type="number" name="weight{{i}}" required></td>
-            </tr>
-            {% endfor %}
-        </table><br>
+            <tbody id="itemsTableBody"></tbody>
+        </table>
+        <br />
 
         <button type="submit">Solve</button>
     </form>
+
+    <script>
+        function generateTableRows(count) {
+            const tbody = document.getElementById("itemsTableBody");
+            tbody.innerHTML = "";
+
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                <td><input type="text" name="name${i}" required></td>
+                <td><input type="number" name="profit${i}" required></td>
+                <td><input type="number" name="weight${i}" required></td>
+            `;
+                tbody.appendChild(row);
+            }
+        }
+
+        // Initialize table with 8 rows on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            generateTableRows(8);
+
+            // Hanya generate tabel saat user selesai edit (change event)
+            document
+                .getElementById("itemCount")
+                .addEventListener("change", function () {
+                    let value = parseInt(this.value) || 8;
+                    generateTableRows(value);
+                });
+
+            // Validasi saat submit form
+            document.querySelector("form").addEventListener("submit", function (e) {
+                let itemCount =
+                    parseInt(document.getElementById("itemCount").value) || 8;
+                if (itemCount < 8) {
+                    e.preventDefault();
+                    alert("Jumlah item minimal harus 8!");
+                    document.getElementById("itemCount").value = 8;
+                }
+            });
+        });
+    </script>
 
     {% if sorted_items %}
     <div class="result">
         <h3>Sorted Items:</h3>
         <ul>
-        {% for item in sorted_items %}
-            <li>{{ item.name }} - Profit: {{ item.profit }}, Weight: {{ item.weight }}</li>
-        {% endfor %}
+            {% for item in sorted_items %}
+            <li>
+                {{ item.name }} - Profit: {{ item.profit }}, Weight: {{ item.weight }}
+            </li>
+            {% endfor %}
         </ul>
     </div>
-    {% endif %}
-
-    {% if output %}
+    {% endif %} {% if output %}
     <div class="result">
         <h3>Solusi Optimal:</h3>
         <table>
-            <tr><th>Nama</th><th>Berat</th><th>Profit</th></tr>
+            <tr>
+                <th>Nama</th>
+                <th>Berat</th>
+                <th>Profit</th>
+            </tr>
             {% for item in output.selected %}
-            <tr><td>{{ item.name }}</td><td>{{ item.weight }}</td><td>{{ item.profit }}</td></tr>
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.weight }}</td>
+                <td>{{ item.profit }}</td>
+            </tr>
             {% endfor %}
-            <tr><td><b>TOTAL</b></td><td><b>{{ output.total_weight }}</b></td><td><b>{{ output.total_profit }}</b></td></tr>
+            <tr>
+                <td><b>TOTAL</b></td>
+                <td><b>{{ output.total_weight }}</b></td>
+                <td><b>{{ output.total_profit }}</b></td>
+            </tr>
         </table>
         <p>Sisa kapasitas: {{ output.remaining }}</p>
     </div>
-    {% endif %}
-
-    {% if statistics %}
+    {% endif %} {% if statistics %}
     <div class="result">
         <h3>Statistics:</h3>
         <p>{{ statistics }}</p>
     </div>
     {% endif %}
 </body>
+
 </html>
