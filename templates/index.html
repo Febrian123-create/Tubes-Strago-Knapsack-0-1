@@ -1,196 +1,833 @@
 <!doctype html>
-<html>
+<html lang="id">
+
 <head>
-    <title>Knapsack Solver</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulasi Pemilihan Proyek — Knapsack 0/1</title>
     <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --muted: #64748b;
+            --blue: #2563eb;
+            --blue-light: #dbeafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 24px 16px 60px;
         }
 
-        h2 {
-            color: #2c3e50;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ─────────────────────────── */
+        header {
             text-align: center;
+            margin-bottom: 28px;
         }
 
-        form {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 700px;
-            margin: auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        header h1 {
+            font-size: 1.7rem;
+            margin: 0 0 6px;
+            color: var(--text);
+        }
+
+        header h1 .accent {
+            color: var(--blue);
+        }
+
+        header p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* ── Cards ──────────────────────────── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), 0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.45s ease both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ── Form ───────────────────────────── */
+        .form-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 200px;
         }
 
         label {
-            font-weight: bold;
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: var(--muted);
         }
 
         input[type="number"],
         input[type="text"] {
-            padding: 8px;
-            margin: 5px 0;
-            width: 95%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+            color: var(--text);
+        }
+
+        input:focus {
+            outline: 2px solid var(--blue-light);
+            border-color: var(--blue);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 6px;
         }
 
         th,
         td {
-            padding: 10px;
-            text-align: center;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
         }
 
         th {
-            background: #3498db;
-            color: white;
+            background: #f1f5f9;
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        tr:nth-child(even) {
-            background: #f9f9f9;
+        td input {
+            margin: 0;
+        }
+
+        .row-num {
+            color: var(--muted);
+            width: 36px;
+            text-align: center;
+        }
+
+        .btn-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
         }
 
         button {
-            background: #3498db;
-            color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            padding: 11px 22px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
+            transition: filter 0.15s ease;
         }
 
         button:hover {
-            background: #2980b9;
+            filter: brightness(0.93);
         }
 
-        .result {
-            max-width: 700px;
-            margin: 20px auto;
-            background: #ecf0f1;
-            padding: 15px;
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ── Stat cards ─────────────────────── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        }
+
+        .stat-card .label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stat-card.green .value {
+            color: var(--green);
+        }
+
+        .stat-card.blue .value {
+            color: var(--blue);
+        }
+
+        /* ── Budget bar ─────────────────────── */
+        .budget-bar {
+            display: flex;
+            height: 42px;
+            border-radius: 9px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+        }
+
+        .budget-seg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+
+        .budget-rest {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        .bar-caption {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        /* ── Badges ─────────────────────────── */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.yes {
+            background: var(--green-light);
+            color: #047857;
+        }
+
+        .badge.no {
+            background: #f1f5f9;
+            color: var(--muted);
+        }
+
+        .badge.pruned {
+            background: var(--red-light);
+            color: #b91c1c;
+        }
+
+        .badge.go {
+            background: var(--blue-light);
+            color: #1d4ed8;
+        }
+
+        /* ── Profit chart ───────────────────── */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 70px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+        }
+
+        .chart-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chart-track {
+            background: #f1f5f9;
+            border-radius: 6px;
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .chart-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: #cbd5e1;
+            transition: width 0.6s ease;
+        }
+
+        .chart-fill.selected {
+            background: linear-gradient(90deg, var(--green), #34d399);
+        }
+
+        .chart-val {
+            text-align: right;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        /* ── Tree ───────────────────────────── */
+        .tree-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fcfdfe;
+        }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .legend span::before {
+            content: "●";
+            margin-right: 5px;
+        }
+
+        .legend .l-path::before {
+            color: var(--green);
+        }
+
+        .legend .l-pruned::before {
+            color: var(--red);
+        }
+
+        .legend .l-normal::before {
+            color: #3b82f6;
+        }
+
+        /* ── Log table ──────────────────────── */
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--blue);
+            font-size: 0.92rem;
+            user-select: none;
+        }
+
+        .log-wrap {
+            max-height: 420px;
+            overflow-y: auto;
+            margin-top: 12px;
+            border: 1px solid var(--border);
             border-radius: 8px;
         }
 
-        .result h3 {
-            color: #2c3e50;
+        .log-wrap table {
+            margin: 0;
+        }
+
+        .log-wrap th {
+            position: sticky;
+            top: 0;
+        }
+
+        .empty-msg {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            border-radius: 9px;
+            padding: 14px 16px;
+            font-size: 0.92rem;
         }
     </style>
 </head>
 
 <body>
-    <h2>Knapsack Solver</h2>
-    <form method="POST">
-        <label>Jumlah Item:</label><br />
-        <input type="number" id="itemCount" name="itemCount" min="8" value="8" required /><br /><br />
+    <div class="container">
+        <header>
+            <h1>📊 Simulasi <span class="accent">Pemilihan Proyek</span> — Knapsack 0/1</h1>
+            <p>Backtracking + Branch &amp; Bound · Pilih kombinasi proyek dengan profit (P) maksimal
+                tanpa melebihi batas waktu (W = durasi/hari) yang tersedia.</p>
+        </header>
 
-        <label>Capacity:</label><br />
-        <input type="number" name="capacity" required /><br /><br />
+        <!-- ── Input ─────────────────────────── -->
+        <form method="POST" class="card">
+            <h2>📝 Data Proyek</h2>
+            <div class="form-row">
+                <div class="field">
+                    <label for="budget">Batas Waktu Tersedia (hari)</label>
+                    <input type="number" id="budget" name="budget" min="1" required
+                        value="{{ budget if budget else '' }}" placeholder="contoh: 30" />
+                </div>
+                <div class="field">
+                    <label for="itemCount">Jumlah Proyek (min. 8)</label>
+                    <input type="number" id="itemCount" name="itemCount" min="8" value="8" required />
+                </div>
+            </div>
 
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>Nama</th>
-                <th>Profit</th>
-                <th>Weight</th>
-            </tr>
-            <tbody id="itemsTableBody"></tbody>
-        </table>
-        <br />
+            <table>
+                <thead>
+                    <tr>
+                        <th class="row-num">#</th>
+                        <th>Nama Proyek</th>
+                        <th>Profit (P)</th>
+                        <th>Durasi / hari (W)</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsTableBody"></tbody>
+            </table>
 
-        <button type="submit">Solve</button>
-    </form>
+            <div class="btn-bar">
+                <button type="button" class="btn-secondary" id="fillSample">✨ Isi Contoh Data</button>
+                <button type="submit" class="btn-primary">🔍 Hitung Kombinasi Optimal</button>
+            </div>
+        </form>
+
+        {% if output %}
+        <!-- ── Ringkasan ─────────────────────── -->
+        <div class="stat-grid fade-in">
+            <div class="stat-card green">
+                <div class="label">Total Profit</div>
+                <div class="value">{{ output.total_profit }}</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="label">Durasi Terpakai</div>
+                <div class="value">{{ output.total_duration }} / {{ budget }} hari</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Sisa Waktu</div>
+                <div class="value">{{ output.remaining }} hari</div>
+            </div>
+        </div>
+
+        {% if output.selected %}
+        <!-- ── Timeline budget ───────────────── -->
+        <div class="card fade-in">
+            <h2>📅 Timeline Penggunaan Waktu</h2>
+            <div class="budget-bar">
+                {% set palette = ['#2563eb', '#10b981', '#0ea5e9', '#34d399', '#6366f1', '#14b8a6'] %}
+                {% for p in output.selected %}
+                <div class="budget-seg" style="width: {{ p.duration / budget * 100 }}%;
+                        background: {{ palette[loop.index0 % palette|length] }};"
+                    title="{{ p.name }} — {{ p.duration }} hari">
+                    {{ p.name }} ({{ p.duration }}h)
+                </div>
+                {% endfor %}
+                {% if output.remaining > 0 %}
+                <div class="budget-rest" style="width: {{ output.remaining / budget * 100 }}%;">
+                    sisa {{ output.remaining }}h
+                </div>
+                {% endif %}
+            </div>
+            <div class="bar-caption">
+                <span>{{ output.used_percent }}% budget waktu terpakai</span>
+                <span>{{ budget }} hari tersedia</span>
+            </div>
+        </div>
+
+        <!-- ── Solusi optimal ────────────────── -->
+        <div class="card fade-in">
+            <h2>🏆 Proyek Terpilih (Solusi Optimal)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Proyek</th>
+                        <th>Durasi (hari)</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in output.selected %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.duration }}</td>
+                        <td>{{ p.profit }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><b>TOTAL</b></td>
+                        <td><b>{{ output.total_duration }}</b></td>
+                        <td><b>{{ output.total_profit }}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-msg fade-in">
+            ⚠️ Tidak ada proyek yang dapat dipilih — semua durasi proyek melebihi batas waktu
+            {{ budget }} hari.
+        </div>
+        {% endif %}
+
+        <!-- ── Tabel rasio ───────────────────── -->
+        <div class="card fade-in">
+            <h2>📈 Urutan Proyek Berdasarkan Rasio Profit/Hari</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="row-num">#</th>
+                        <th>Nama Proyek</th>
+                        <th>Profit (P)</th>
+                        <th>Durasi (W)</th>
+                        <th>Rasio P/W</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in sorted_projects %}
+                    <tr>
+                        <td class="row-num">{{ loop.index }}</td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.profit }}</td>
+                        <td>{{ p.duration }}</td>
+                        <td>{{ p.ratio }}</td>
+                        <td>
+                            {% if p.selected %}
+                            <span class="badge yes">✅ Dipilih</span>
+                            {% else %}
+                            <span class="badge no">Tidak</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── Grafik profit ─────────────────── -->
+        <div class="card fade-in">
+            <h2>💰 Perbandingan Profit Antar Proyek</h2>
+            {% set max_profit = sorted_projects | map(attribute='profit') | max %}
+            {% for p in sorted_projects %}
+            <div class="chart-row">
+                <div class="chart-name" title="{{ p.name }}">{{ p.name }}</div>
+                <div class="chart-track">
+                    <div class="chart-fill {{ 'selected' if p.selected }}"
+                        style="width: {{ p.profit / max_profit * 100 }}%;"></div>
+                </div>
+                <div class="chart-val">{{ p.profit }}</div>
+            </div>
+            {% endfor %}
+            <div class="bar-caption">
+                <span><span class="badge yes">hijau</span> = terpilih &nbsp;
+                    <span class="badge no">abu</span> = tidak terpilih</span>
+            </div>
+        </div>
+
+        <!-- ── Pohon B&B ─────────────────────── -->
+        <div class="card fade-in">
+            <h2>🌳 Pohon Eksplorasi Branch &amp; Bound</h2>
+            <div class="legend">
+                <span class="l-path">jalur solusi optimal</span>
+                <span class="l-pruned">node dipangkas (pruned ✂)</span>
+                <span class="l-normal">node dieksplorasi</span>
+                <span>— garis solid = INCLUDE, putus-putus = EXCLUDE</span>
+            </div>
+            <div class="tree-wrap" id="treeWrap"></div>
+        </div>
+
+        <!-- ── Log langkah ───────────────────── -->
+        <div class="card fade-in">
+            <h2>🔬 Langkah-Langkah Algoritma</h2>
+            <details>
+                <summary>Tampilkan {{ exploration_log | length }} langkah eksplorasi</summary>
+                <div class="log-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Aksi</th>
+                                <th>Posisi Item</th>
+                                <th>Profit Sejauh Ini</th>
+                                <th>Durasi Sejauh Ini</th>
+                                <th>Upper Bound</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in exploration_log %}
+                            <tr>
+                                <td>{{ e.node_id }}</td>
+                                <td>{{ e.action }}</td>
+                                <td>{{ e.item_name }}</td>
+                                <td>{{ e.profit_so_far }}</td>
+                                <td>{{ e.weight_so_far }}</td>
+                                <td>{{ e.upper_bound }}</td>
+                                <td>
+                                    {% if e.pruned %}
+                                    <span class="badge pruned">✂ Pruned</span>
+                                    {% else %}
+                                    <span class="badge go">Lanjut</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+        </div>
+
+        <!-- ── Statistik ─────────────────────── -->
+        <div class="stat-grid fade-in">
+            <div class="stat-card blue">
+                <div class="label">Node Dikunjungi</div>
+                <div class="value">{{ stats.node_count }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Node Dipangkas</div>
+                <div class="value">{{ stats.pruned_count }}</div>
+            </div>
+            <div class="stat-card green">
+                <div class="label">Waktu Eksekusi</div>
+                <div class="value">{{ stats.elapsed_ms }} ms</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
     <script>
-        function generateTableRows(count) {
+        const SAMPLE_PROJECTS = {{ sample_projects | tojson }};
+        const SUBMITTED = {{ submitted_projects | tojson if submitted_projects else 'null' }};
+        const TREE = {{ tree | tojson if tree else 'null' }};
+
+        // ── Form: tabel input dinamis ──────────────────────────
+        function generateTableRows(count, data) {
             const tbody = document.getElementById("itemsTableBody");
             tbody.innerHTML = "";
-
             for (let i = 1; i <= count; i++) {
+                const d = data && data[i - 1] ? data[i - 1] : null;
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                <td><input type="text" name="name${i}" required></td>
-                <td><input type="number" name="profit${i}" required></td>
-                <td><input type="number" name="weight${i}" required></td>
-            `;
+                    <td class="row-num">${i}</td>
+                    <td><input type="text" name="name${i}" placeholder="Nama proyek ${i}" required
+                        value="${d ? d.name.replace(/"/g, '&quot;') : ''}"></td>
+                    <td><input type="number" name="profit${i}" min="1" placeholder="P" required
+                        value="${d ? d.profit : ''}"></td>
+                    <td><input type="number" name="duration${i}" min="1" placeholder="W (hari)" required
+                        value="${d ? d.duration : ''}"></td>
+                `;
                 tbody.appendChild(row);
             }
         }
 
-        // Initialize table with 8 rows on page load
         document.addEventListener("DOMContentLoaded", function () {
-            generateTableRows(8);
+            // Prefill: data submit sebelumnya > kosong
+            if (SUBMITTED && SUBMITTED.length) {
+                const n = Math.max(8, SUBMITTED.length);
+                document.getElementById("itemCount").value = n;
+                generateTableRows(n, SUBMITTED);
+            } else {
+                generateTableRows(8);
+            }
 
-            // Hanya generate tabel saat user selesai edit (change event)
-            document
-                .getElementById("itemCount")
-                .addEventListener("change", function () {
-                    let value = parseInt(this.value) || 8;
-                    generateTableRows(value);
-                });
+            document.getElementById("itemCount").addEventListener("change", function () {
+                let value = parseInt(this.value) || 8;
+                if (value < 8) value = 8;
+                generateTableRows(value);
+            });
 
-            // Validasi saat submit form
+            document.getElementById("fillSample").addEventListener("click", function () {
+                document.getElementById("itemCount").value = SAMPLE_PROJECTS.length;
+                document.getElementById("budget").value = 30;
+                generateTableRows(SAMPLE_PROJECTS.length, SAMPLE_PROJECTS);
+            });
+
             document.querySelector("form").addEventListener("submit", function (e) {
-                let itemCount =
-                    parseInt(document.getElementById("itemCount").value) || 8;
+                let itemCount = parseInt(document.getElementById("itemCount").value) || 8;
                 if (itemCount < 8) {
                     e.preventDefault();
-                    alert("Jumlah item minimal harus 8!");
+                    alert("Jumlah proyek minimal harus 8!");
                     document.getElementById("itemCount").value = 8;
                 }
             });
-        });
-    </script>
 
-    {% if sorted_items %}
-    <div class="result">
-        <h3>Sorted Items:</h3>
-        <ul>
-            {% for item in sorted_items %}
-            <li>
-                {{ item.name }} - Profit: {{ item.profit }}, Weight: {{ item.weight }}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %} {% if output %}
-    <div class="result">
-        <h3>Solusi Optimal:</h3>
-        <table>
-            <tr>
-                <th>Nama</th>
-                <th>Berat</th>
-                <th>Profit</th>
-            </tr>
-            {% for item in output.selected %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.weight }}</td>
-                <td>{{ item.profit }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td><b>TOTAL</b></td>
-                <td><b>{{ output.total_weight }}</b></td>
-                <td><b>{{ output.total_profit }}</b></td>
-            </tr>
-        </table>
-        <p>Sisa kapasitas: {{ output.remaining }}</p>
-    </div>
-    {% endif %} {% if statistics %}
-    <div class="result">
-        <h3>Statistics:</h3>
-        <p>{{ statistics }}</p>
-    </div>
-    {% endif %}
+            if (TREE) renderTree(TREE);
+        });
+
+        // ── Pohon B&B (SVG) ────────────────────────────────────
+        function renderTree(root) {
+            const wrap = document.getElementById("treeWrap");
+            if (!wrap) return;
+
+            // Hitung jumlah node; batasi agar browser tidak berat
+            let nodeCount = 0, maxDepth = 0;
+            (function count(n) {
+                nodeCount++;
+                if (n.depth > maxDepth) maxDepth = n.depth;
+                n.children.forEach(count);
+            })(root);
+
+            if (nodeCount > 2000) {
+                wrap.innerHTML = '<p style="padding:14px;color:var(--muted)">Pohon terlalu besar untuk digambar (' +
+                    nodeCount + ' node). Lihat tabel langkah algoritma di bawah.</p>';
+                return;
+            }
+
+            // Layout: x via leaf-counter (post-order), y = depth
+            const GX = 64, GY = 92, R = 17, PAD = 40;
+            let leafX = 0;
+            (function assign(n) {
+                n.children.forEach(assign);
+                if (n.children.length === 0) {
+                    n._x = leafX++;
+                } else {
+                    n._x = (n.children[0]._x + n.children[n.children.length - 1]._x) / 2;
+                }
+            })(root);
+
+            const width = Math.max(leafX * GX + PAD * 2, 320);
+            const height = (maxDepth + 1) * GY + PAD * 2;
+            const px = n => PAD + n._x * GX + GX / 2;
+            const py = n => PAD + n.depth * GY;
+
+            const NS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(NS, "svg");
+            svg.setAttribute("width", width);
+            svg.setAttribute("height", height);
+
+            // Edges
+            (function drawEdges(n) {
+                n.children.forEach(c => {
+                    const line = document.createElementNS(NS, "line");
+                    line.setAttribute("x1", px(n));
+                    line.setAttribute("y1", py(n) + R);
+                    line.setAttribute("x2", px(c));
+                    line.setAttribute("y2", py(c) - R);
+                    const onPath = n.on_path && c.on_path;
+                    line.setAttribute("stroke", onPath ? "#10b981" : "#94a3b8");
+                    line.setAttribute("stroke-width", onPath ? 2.5 : 1.3);
+                    if (c.action === "EXCLUDE") line.setAttribute("stroke-dasharray", "5 4");
+                    svg.appendChild(line);
+                    drawEdges(c);
+                });
+            })(root);
+
+            // Nodes
+            (function drawNodes(n) {
+                const g = document.createElementNS(NS, "g");
+                const circle = document.createElementNS(NS, "circle");
+                circle.setAttribute("cx", px(n));
+                circle.setAttribute("cy", py(n));
+                circle.setAttribute("r", R);
+                let fill = "#dbeafe", stroke = "#3b82f6";
+                if (n.pruned) { fill = "#fee2e2"; stroke = "#ef4444"; }
+                else if (n.on_path) { fill = "#d1fae5"; stroke = "#10b981"; }
+                circle.setAttribute("fill", fill);
+                circle.setAttribute("stroke", stroke);
+                circle.setAttribute("stroke-width", n.on_path ? 2.5 : 1.5);
+                g.appendChild(circle);
+
+                // Label profit di dalam node
+                const txt = document.createElementNS(NS, "text");
+                txt.setAttribute("x", px(n));
+                txt.setAttribute("y", py(n) + 4);
+                txt.setAttribute("text-anchor", "middle");
+                txt.setAttribute("font-size", "10.5");
+                txt.setAttribute("font-weight", "600");
+                txt.setAttribute("fill", "#1e293b");
+                txt.textContent = n.profit;
+                g.appendChild(txt);
+
+                // Upper bound di bawah node
+                const ub = document.createElementNS(NS, "text");
+                ub.setAttribute("x", px(n));
+                ub.setAttribute("y", py(n) + R + 13);
+                ub.setAttribute("text-anchor", "middle");
+                ub.setAttribute("font-size", "9");
+                ub.setAttribute("fill", "#64748b");
+                ub.textContent = n.pruned ? "✂ " + n.bound.toFixed(0) : "UB " + n.bound.toFixed(0);
+                g.appendChild(ub);
+
+                // Tooltip detail
+                const title = document.createElementNS(NS, "title");
+                title.textContent =
+                    `Node #${n.id} (${n.action})\n` +
+                    `Item: ${n.item}\nProfit: ${n.profit} | Durasi: ${n.weight} hari\n` +
+                    `Upper bound: ${n.bound}` + (n.pruned ? "\n✂ DIPANGKAS" : "");
+                g.appendChild(title);
+
+                svg.appendChild(g);
+                n.children.forEach(drawNodes);
+            })(root);
+
+            wrap.appendChild(svg);
+        }
+    </script>
 </body>
 
 </html>
