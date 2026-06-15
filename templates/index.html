@@ -4,33 +4,33 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Simulasi Pemilihan Proyek — Knapsack 0/1</title>
+    <title>Simulasi Pemilihan Proyek-Knapsack 0/1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0f19;
-            --bg-soft: #0e1322;
-            --card: #151b2c;
-            --card-2: #1a2236;
-            --border: #242f4c;
-            --border-soft: #1d2740;
-            --text: #e6ebf5;
-            --muted: #8b97b4;
-            --faint: #5d6a8a;
-            --brand: #6366f1;
-            --brand-2: #8b5cf6;
-            --brand-soft: rgba(99, 102, 241, 0.14);
-            --green: #10b981;
-            --green-soft: rgba(16, 185, 129, 0.14);
-            --red: #f43f5e;
-            --red-soft: rgba(244, 63, 94, 0.13);
-            --amber: #f59e0b;
-            --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -12px rgba(0, 0, 0, .6);
-            --radius: 16px;
-            --radius-sm: 11px;
+            --bg: #f5f1ec;
+            --bg-soft: #faf8f4;
+            --card: #ffffff;
+            --card-2: #f9f7f3;
+            --border: #e8e3da;
+            --border-soft: #ede8df;
+            --text: #3d3a36;
+            --muted: #8b8680;
+            --faint: #a89f94;
+            --brand: #9b8b6e;
+            --brand-2: #b8956a;
+            --brand-soft: rgba(155, 139, 110, 0.1);
+            --green: #7a9e7f;
+            --green-soft: rgba(122, 158, 127, 0.12);
+            --red: #c97070;
+            --red-soft: rgba(201, 112, 112, 0.12);
+            --amber: #c4a574;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+            --radius: 20px;
+            --radius-sm: 12px;
         }
 
         * {
@@ -42,10 +42,10 @@
         }
 
         body {
-            font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
             background:
-                radial-gradient(900px 500px at 12% -8%, rgba(99, 102, 241, .14), transparent 60%),
-                radial-gradient(800px 500px at 100% 0%, rgba(139, 92, 246, .12), transparent 55%),
+                radial-gradient(900px 500px at 12% -8%, rgba(155, 139, 110, .06), transparent 60%),
+                radial-gradient(800px 500px at 100% 100%, rgba(184, 149, 106, .05), transparent 55%),
                 var(--bg);
             color: var(--text);
             margin: 0;
@@ -77,7 +77,7 @@
             height: 52px;
             border-radius: 15px;
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
-            box-shadow: 0 10px 26px -8px rgba(99, 102, 241, .7);
+            box-shadow: 0 4px 12px rgba(155, 139, 110, .2);
             margin-bottom: 14px;
         }
 
@@ -88,8 +88,9 @@
         }
 
         header h1 {
+            font-family: "Merriweather", serif;
             font-size: 1.75rem;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: -.02em;
             margin: 0 0 8px;
         }
@@ -140,12 +141,11 @@
 
         /* ── Cards ──────────────────────────── */
         .card {
-            background: linear-gradient(180deg, var(--card), var(--bg-soft));
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 22px;
             box-shadow: var(--shadow);
-            backdrop-filter: blur(6px);
         }
 
         .card+.card {
@@ -215,7 +215,7 @@
             border-radius: var(--radius-sm);
             font-size: 0.92rem;
             font-family: inherit;
-            background: #0c1120;
+            background: #fefdfb;
             color: var(--text);
             transition: all .2s ease;
         }
@@ -227,7 +227,7 @@
         input:focus {
             outline: none;
             border-color: var(--brand);
-            background: #0e1426;
+            background: #fdfcfa;
             box-shadow: 0 0 0 3px var(--brand-soft);
         }
 
@@ -300,12 +300,12 @@
             flex: 1;
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
             color: #fff;
-            box-shadow: 0 10px 22px -10px rgba(99, 102, 241, .9);
+            box-shadow: 0 4px 12px rgba(155, 139, 110, .2);
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 14px 28px -10px rgba(99, 102, 241, 1);
+            box-shadow: 0 6px 16px rgba(155, 139, 110, .25);
         }
 
         .btn-secondary {
@@ -316,7 +316,7 @@
 
         .btn-secondary:hover {
             border-color: var(--brand);
-            color: #fff;
+            color: var(--brand);
         }
 
         /* ── Tabs ───────────────────────────── */
@@ -353,7 +353,7 @@
         .tab-btn.active {
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
             color: #fff;
-            box-shadow: 0 8px 18px -10px rgba(99, 102, 241, .9);
+            box-shadow: 0 2px 8px rgba(155, 139, 110, .15);
         }
 
         .tab-panel {
@@ -374,7 +374,7 @@
 
         .stat-card {
             position: relative;
-            background: linear-gradient(180deg, var(--card-2), var(--bg-soft));
+            background: var(--card-2);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 16px;
@@ -385,7 +385,7 @@
             content: "";
             position: absolute;
             inset: 0 auto 0 0;
-            width: 3px;
+            width: 4px;
             background: var(--brand);
         }
 
@@ -427,11 +427,11 @@
         }
 
         .stat-card.green .s-value {
-            color: #34d399;
+            color: #6b9a74;
         }
 
         .stat-card.violet .s-value {
-            color: #a78bfa;
+            color: #a68757;
         }
 
         .section-gap {
@@ -445,7 +445,7 @@
             border-radius: 11px;
             overflow: hidden;
             border: 1px solid var(--border);
-            background: #0c1120;
+            background: #fefdfb;
         }
 
         .budget-seg {
@@ -453,13 +453,14 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding: 0 6px;
+            padding: 0 8px;
             transition: filter .2s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .budget-seg:hover {
@@ -511,7 +512,7 @@
         }
 
         .data-table tbody tr:hover {
-            background: rgba(99, 102, 241, .06);
+            background: rgba(122, 158, 127, .04);
         }
 
         .data-table tr:last-child td {
@@ -520,9 +521,9 @@
 
         .data-table .total-row td {
             font-weight: 800;
-            color: #fff;
+            color: #3d3a36;
             border-top: 1px solid var(--border);
-            background: rgba(16, 185, 129, .06);
+            background: rgba(122, 158, 127, .06);
         }
 
         .num {
@@ -549,22 +550,22 @@
 
         .badge.yes {
             background: var(--green-soft);
-            color: #34d399;
+            color: #6b9a74;
         }
 
         .badge.no {
-            background: rgba(139, 151, 180, .12);
+            background: rgba(139, 134, 128, .1);
             color: var(--muted);
         }
 
         .badge.pruned {
             background: var(--red-soft);
-            color: #fb7185;
+            color: #a86464;
         }
 
         .badge.go {
             background: var(--brand-soft);
-            color: #a5b4fc;
+            color: #8b7e67;
         }
 
         /* ── Profit chart ───────────────────── */
@@ -590,8 +591,8 @@
         }
 
         .chart-track {
-            background: #0c1120;
-            border: 1px solid var(--border-soft);
+            background: #f9f7f3;
+            border: 1px solid var(--border);
             border-radius: 7px;
             height: 24px;
             overflow: hidden;
@@ -600,14 +601,14 @@
         .chart-fill {
             height: 100%;
             border-radius: 7px;
-            background: #303b5c;
+            background: #d4d0c8;
             width: 0;
             animation: grow 0.8s ease forwards;
         }
 
         .chart-fill.selected {
-            background: linear-gradient(90deg, var(--green), #34d399);
-            box-shadow: 0 0 16px -2px rgba(16, 185, 129, .5);
+            background: linear-gradient(90deg, var(--green), #9bc4a0);
+            box-shadow: 0 0 12px -2px rgba(122, 158, 127, .3);
         }
 
         @keyframes grow {
@@ -644,7 +645,7 @@
 
         .zoom-btn:hover {
             border-color: var(--brand);
-            color: #fff;
+            color: var(--brand);
         }
 
         .zoom-label {
@@ -695,8 +696,8 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             background:
-                radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .04) 1px, transparent 0) 0 0 / 22px 22px,
-                #0a0e1a;
+                radial-gradient(circle at 1px 1px, rgba(200, 195, 188, .08) 1px, transparent 0) 0 0 / 22px 22px,
+                #fefdfb;
             height: 520px;
             cursor: grab;
         }
@@ -719,10 +720,10 @@
             right: 12px;
             font-size: 0.72rem;
             color: var(--faint);
-            background: rgba(10, 14, 26, .8);
+            background: rgba(245, 241, 236, .85);
             padding: 4px 10px;
             border-radius: 8px;
-            border: 1px solid var(--border-soft);
+            border: 1px solid var(--border);
             pointer-events: none;
         }
 
@@ -750,7 +751,7 @@
         .filter-btn.active {
             background: var(--brand-soft);
             border-color: var(--brand);
-            color: #c7cdff;
+            color: #8b7e67;
         }
 
         .log-wrap {
@@ -767,7 +768,7 @@
         .log-wrap thead th {
             position: sticky;
             top: 0;
-            background: var(--card);
+            background: var(--card-2);
             z-index: 1;
         }
 
@@ -783,9 +784,9 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(245, 158, 11, .1);
-            border: 1px solid rgba(245, 158, 11, .3);
-            color: #fcd34d;
+            background: rgba(196, 165, 116, .08);
+            border: 1px solid rgba(196, 165, 116, .2);
+            color: #9b8552;
             border-radius: 12px;
             padding: 16px 18px;
             font-size: 0.9rem;
@@ -814,7 +815,7 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #33406b;
+            background: #d4cfc2;
         }
     </style>
 </head>
@@ -822,17 +823,10 @@
 <body>
     <div class="shell {{ 'has-results' if output }}">
         <header>
-            <span class="brand-mark">
-                <!-- bar chart icon -->
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <line x1="12" y1="20" x2="12" y2="10" />
-                    <line x1="18" y1="20" x2="18" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="16" />
-                </svg>
-            </span>
-            <h1>Simulasi <span class="accent">Pemilihan Proyek</span> — Knapsack 0/1</h1>
-            <p>Backtracking + Branch &amp; Bound · Pilih kombinasi proyek dengan profit (P) maksimal
+            <h1>Simulasi <span class="accent">Pemilihan Proyek</span></h1>
+            <h1 class="accent">Knapsack 0/1</h1>
+            <h2>Backtracking + Branch & Bound </h2>
+            <p>Pilih kombinasi proyek dengan profit (P) maksimal
                 tanpa melebihi batas waktu (W = durasi/hari) yang tersedia.</p>
         </header>
 
@@ -841,11 +835,6 @@
             <aside class="form-pane">
                 <form method="POST" class="card">
                     <h2 class="card-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                            <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
-                        </svg>
                         Data Proyek
                     </h2>
                     <div class="form-row">
@@ -874,19 +863,13 @@
 
                     <div class="btn-bar">
                         <button type="button" class="btn-secondary" id="fillSample">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                            </svg>
                             Isi Contoh Data
                         </button>
                         <button type="submit" class="btn-primary">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8" />
-                                <path d="m21 21-4.3-4.3" />
-                            </svg>
                             Hitung Kombinasi Optimal
+                        </button>
+                        <button type="button" class="btn-secondary" id="resetBtn">
+                            Reset
                         </button>
                     </div>
                 </form>
@@ -897,43 +880,15 @@
             <main class="results-pane fade-in">
                 <nav class="tabs" role="tablist">
                     <button type="button" class="tab-btn active" data-tab="overview">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="9" rx="1" />
-                            <rect x="14" y="3" width="7" height="5" rx="1" />
-                            <rect x="14" y="12" width="7" height="9" rx="1" />
-                            <rect x="3" y="16" width="7" height="5" rx="1" />
-                        </svg>
                         Ringkasan
                     </button>
                     <button type="button" class="tab-btn" data-tab="analysis">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 3v18h18" />
-                            <path d="m19 9-5 5-4-4-3 3" />
-                        </svg>
                         Analisis
                     </button>
                     <button type="button" class="tab-btn" data-tab="tree">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="5" r="2.5" />
-                            <circle cx="6" cy="19" r="2.5" />
-                            <circle cx="18" cy="19" r="2.5" />
-                            <path d="M12 7.5v3M12 10.5 6.8 16.7M12 10.5l5.2 6.2" />
-                        </svg>
-                        Pohon B&amp;B
+                        Pohon B&B
                     </button>
                     <button type="button" class="tab-btn" data-tab="log">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="8" y1="6" x2="21" y2="6" />
-                            <line x1="8" y1="12" x2="21" y2="12" />
-                            <line x1="8" y1="18" x2="21" y2="18" />
-                            <line x1="3" y1="6" x2="3.01" y2="6" />
-                            <line x1="3" y1="12" x2="3.01" y2="12" />
-                            <line x1="3" y1="18" x2="3.01" y2="18" />
-                        </svg>
                         Log Simulasi
                     </button>
                 </nav>
@@ -943,32 +898,18 @@
                     <div class="stat-grid">
                         <div class="stat-card green">
                             <div class="s-label">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="1" x2="12" y2="23" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
                                 Total Profit
                             </div>
                             <div class="s-value">{{ output.total_profit }}</div>
                         </div>
                         <div class="stat-card violet">
                             <div class="s-label">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="9" />
-                                    <polyline points="12 7 12 12 15 14" />
-                                </svg>
                                 Durasi Terpakai
                             </div>
                             <div class="s-value">{{ output.total_duration }}<small> / {{ budget }} hari</small></div>
                         </div>
                         <div class="stat-card">
                             <div class="s-label">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" />
-                                </svg>
                                 Sisa Waktu
                             </div>
                             <div class="s-value">{{ output.remaining }}<small> hari</small></div>
@@ -978,17 +919,10 @@
                     {% if output.selected %}
                     <div class="card section-gap">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
                             Timeline Penggunaan Waktu
                         </h2>
                         <div class="budget-bar">
-                            {% set palette = ['#6366f1', '#10b981', '#0ea5e9', '#8b5cf6', '#14b8a6', '#f59e0b'] %}
+                            {% set palette = ['#c97070', '#7a9e7f', '#b8956a', '#9b8b6e', '#c4a574', '#a89f94'] %}
                             {% for p in output.selected %}
                             <div class="budget-seg" style="width: {{ p.duration / budget * 100 }}%;
                                     background: {{ palette[loop.index0 % palette|length] }};"
@@ -1010,15 +944,6 @@
 
                     <div class="card section-gap">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                                <path d="M4 22h16" />
-                                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-                            </svg>
                             Proyek Terpilih (Solusi Optimal)
                         </h2>
                         <table class="data-table">
@@ -1047,12 +972,6 @@
                     </div>
                     {% else %}
                     <div class="empty-msg section-gap">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
-                            <line x1="12" y1="9" x2="12" y2="13" />
-                            <line x1="12" y1="17" x2="12.01" y2="17" />
-                        </svg>
                         <span>Tidak ada proyek yang dapat dipilih — semua durasi proyek melebihi batas waktu
                             {{ budget }} hari.</span>
                     </div>
@@ -1078,12 +997,6 @@
                 <section class="tab-panel" data-panel="analysis">
                     <div class="card">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="20" x2="12" y2="10" />
-                                <line x1="18" y1="20" x2="18" y2="4" />
-                                <line x1="6" y1="20" x2="6" y2="16" />
-                            </svg>
                             Perbandingan Profit Antar Proyek
                         </h2>
                         {% set max_profit = sorted_projects | map(attribute='profit') | max %}
@@ -1101,10 +1014,6 @@
 
                     <div class="card section-gap">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18M7 12h10M10 18h4" />
-                            </svg>
                             Urutan Proyek Berdasarkan Rasio Profit/Hari
                         </h2>
                         <table class="data-table">
@@ -1150,32 +1059,15 @@
                 <section class="tab-panel" data-panel="tree">
                     <div class="card">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="5" r="2.5" />
-                                <circle cx="6" cy="19" r="2.5" />
-                                <circle cx="18" cy="19" r="2.5" />
-                                <path d="M12 7.5v3M12 10.5 6.8 16.7M12 10.5l5.2 6.2" />
-                            </svg>
                             Pohon Eksplorasi Branch &amp; Bound
                         </h2>
                         <div class="tree-toolbar">
                             <button type="button" class="zoom-btn" id="zoomOut" title="Perkecil">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>
                             </button>
                             <span class="zoom-label" id="zoomLabel">100%</span>
                             <button type="button" class="zoom-btn" id="zoomIn" title="Perbesar">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12"
-                                        x2="19" y2="12" /></svg>
                             </button>
                             <button type="button" class="zoom-btn" id="zoomReset" title="Reset tampilan">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                    <path d="M3 3v5h5" />
-                                </svg>
                             </button>
                             <div class="legend">
                                 <span><i class="l-path"></i>jalur optimal</span>
@@ -1193,13 +1085,6 @@
                 <section class="tab-panel" data-panel="log">
                     <div class="card">
                         <h2 class="card-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
-                                <polyline points="14 2 14 8 20 8" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                            </svg>
                             Langkah-Langkah Algoritma ({{ exploration_log | length }} langkah)
                         </h2>
                         <div class="filter-bar">
@@ -1303,6 +1188,10 @@
                 document.getElementById("itemCount").value = SAMPLE_PROJECTS.length;
                 document.getElementById("budget").value = 30;
                 generateTableRows(SAMPLE_PROJECTS.length, SAMPLE_PROJECTS);
+            });
+
+            document.getElementById("resetBtn").addEventListener("click", function () {
+                location.reload();
             });
 
             document.querySelector("form").addEventListener("submit", function (e) {
@@ -1480,7 +1369,7 @@
                     line.setAttribute("x2", px(c));
                     line.setAttribute("y2", py(c) - R);
                     const onPath = n.on_path && c.on_path;
-                    line.setAttribute("stroke", onPath ? "#10b981" : "#39456b");
+                    line.setAttribute("stroke", onPath ? "#7a9e7f" : "#d4cfc2");
                     line.setAttribute("stroke-width", onPath ? 3 : 1.4);
                     line.setAttribute("stroke-linecap", "round");
                     if (c.action === "EXCLUDE") line.setAttribute("stroke-dasharray", "5 5");
@@ -1496,9 +1385,9 @@
                 circle.setAttribute("cx", px(n));
                 circle.setAttribute("cy", py(n));
                 circle.setAttribute("r", R);
-                let fill = "#1c2742", stroke = "#6366f1";
-                if (n.pruned) { fill = "#2a1620"; stroke = "#f43f5e"; }
-                else if (n.on_path) { fill = "#0f2a22"; stroke = "#10b981"; }
+                let fill = "#f9f7f3", stroke = "#b8956a";
+                if (n.pruned) { fill = "#ede8df"; stroke = "#c97070"; }
+                else if (n.on_path) { fill = "#e8f5ec"; stroke = "#7a9e7f"; }
                 circle.setAttribute("fill", fill);
                 circle.setAttribute("stroke", stroke);
                 circle.setAttribute("stroke-width", n.on_path || n.pruned ? 2.6 : 1.6);
@@ -1514,7 +1403,7 @@
                         cross.setAttribute("y1", py(n) + y1);
                         cross.setAttribute("x2", px(n) + x2);
                         cross.setAttribute("y2", py(n) + y2);
-                        cross.setAttribute("stroke", "#fb7185");
+                        cross.setAttribute("stroke", "#a86464");
                         cross.setAttribute("stroke-width", 1.8);
                         cross.setAttribute("stroke-linecap", "round");
                         g.appendChild(cross);
@@ -1526,8 +1415,8 @@
                     txt.setAttribute("text-anchor", "middle");
                     txt.setAttribute("font-size", "11");
                     txt.setAttribute("font-weight", "700");
-                    txt.setAttribute("font-family", "Plus Jakarta Sans, sans-serif");
-                    txt.setAttribute("fill", n.on_path ? "#6ee7b7" : "#c7d0e8");
+                    txt.setAttribute("font-family", "Inter, sans-serif");
+                    txt.setAttribute("fill", n.on_path ? "#5db890" : "#8b8680");
                     txt.textContent = n.profit;
                     g.appendChild(txt);
                 }
@@ -1537,8 +1426,8 @@
                 ub.setAttribute("y", py(n) + R + 14);
                 ub.setAttribute("text-anchor", "middle");
                 ub.setAttribute("font-size", "9.5");
-                ub.setAttribute("font-family", "Plus Jakarta Sans, sans-serif");
-                ub.setAttribute("fill", n.pruned ? "#fb7185" : "#7c89ad");
+                ub.setAttribute("font-family", "Inter, sans-serif");
+                ub.setAttribute("fill", n.pruned ? "#a86464" : "#b0a89d");
                 ub.textContent = (n.pruned ? "✕ " : "UB ") + n.bound.toFixed(0);
                 g.appendChild(ub);
 
