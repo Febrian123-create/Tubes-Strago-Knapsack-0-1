@@ -5,92 +5,177 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Simulasi Pemilihan Proyek — Knapsack 0/1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #1e293b;
-            --muted: #64748b;
-            --blue: #2563eb;
-            --blue-light: #dbeafe;
+            --bg: #0b0f19;
+            --bg-soft: #0e1322;
+            --card: #151b2c;
+            --card-2: #1a2236;
+            --border: #242f4c;
+            --border-soft: #1d2740;
+            --text: #e6ebf5;
+            --muted: #8b97b4;
+            --faint: #5d6a8a;
+            --brand: #6366f1;
+            --brand-2: #8b5cf6;
+            --brand-soft: rgba(99, 102, 241, 0.14);
             --green: #10b981;
-            --green-light: #d1fae5;
-            --red: #ef4444;
-            --red-light: #fee2e2;
+            --green-soft: rgba(16, 185, 129, 0.14);
+            --red: #f43f5e;
+            --red-soft: rgba(244, 63, 94, 0.13);
+            --amber: #f59e0b;
+            --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -12px rgba(0, 0, 0, .6);
+            --radius: 16px;
+            --radius-sm: 11px;
         }
 
         * {
             box-sizing: border-box;
         }
 
-        body {
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 24px 16px 60px;
+        html {
+            scroll-behavior: smooth;
         }
 
-        .container {
-            max-width: 1000px;
+        body {
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(900px 500px at 12% -8%, rgba(99, 102, 241, .14), transparent 60%),
+                radial-gradient(800px 500px at 100% 0%, rgba(139, 92, 246, .12), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 28px 20px 64px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .shell {
+            max-width: 1240px;
             margin: 0 auto;
         }
 
         /* ── Header ─────────────────────────── */
         header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
+        }
+
+        .brand-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            box-shadow: 0 10px 26px -8px rgba(99, 102, 241, .7);
+            margin-bottom: 14px;
+        }
+
+        .brand-mark svg {
+            width: 27px;
+            height: 27px;
+            color: #fff;
         }
 
         header h1 {
-            font-size: 1.7rem;
-            margin: 0 0 6px;
-            color: var(--text);
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin: 0 0 8px;
         }
 
         header h1 .accent {
-            color: var(--blue);
+            background: linear-gradient(120deg, var(--brand), var(--brand-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
             color: var(--muted);
-            margin: 0;
-            font-size: 0.95rem;
+            margin: 0 auto;
+            max-width: 640px;
+            font-size: 0.94rem;
+            line-height: 1.55;
+        }
+
+        /* ── Layout ─────────────────────────── */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .shell.has-results .layout {
+            grid-template-columns: minmax(340px, 35%) 1fr;
+        }
+
+        @media (max-width: 980px) {
+            .shell.has-results .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .shell.has-results .form-pane {
+            position: sticky;
+            top: 20px;
+        }
+
+        @media (max-width: 980px) {
+            .shell.has-results .form-pane {
+                position: static;
+            }
         }
 
         /* ── Cards ──────────────────────────── */
         .card {
-            background: var(--card);
+            background: linear-gradient(180deg, var(--card), var(--bg-soft));
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 22px 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px);
         }
 
-        .card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), 0 8px 20px rgba(15, 23, 42, 0.06);
+        .card+.card {
+            margin-top: 18px;
         }
 
-        .card h2 {
-            margin: 0 0 14px;
-            font-size: 1.1rem;
+        .card-title {
+            margin: 0 0 16px;
+            font-size: 1.02rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        .card-title svg {
+            width: 18px;
+            height: 18px;
+            color: var(--brand);
+            flex: none;
         }
 
         .fade-in {
-            animation: fadeIn 0.45s ease both;
+            animation: fadeIn .5s ease both;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(10px);
             }
 
             to {
@@ -101,150 +186,266 @@
 
         /* ── Form ───────────────────────────── */
         .form-row {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
         }
 
-        .field {
-            flex: 1;
-            min-width: 200px;
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         label {
             display: block;
             font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
+            font-size: 0.78rem;
+            margin-bottom: 7px;
             color: var(--muted);
+            letter-spacing: .01em;
         }
 
         input[type="number"],
         input[type="text"] {
             width: 100%;
-            padding: 9px 12px;
+            padding: 11px 13px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background: #fff;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-family: inherit;
+            background: #0c1120;
             color: var(--text);
+            transition: all .2s ease;
+        }
+
+        input::placeholder {
+            color: var(--faint);
         }
 
         input:focus {
-            outline: 2px solid var(--blue-light);
-            border-color: var(--blue);
+            outline: none;
+            border-color: var(--brand);
+            background: #0e1426;
+            box-shadow: 0 0 0 3px var(--brand-soft);
         }
 
-        table {
+        .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 6px;
         }
 
-        th,
-        td {
-            padding: 8px 10px;
+        .items-table th {
+            padding: 7px 8px;
             text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.92rem;
-        }
-
-        th {
-            background: #f1f5f9;
-            color: var(--muted);
-            font-size: 0.8rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
+            color: var(--faint);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-soft);
         }
 
-        td input {
-            margin: 0;
+        .items-table td {
+            padding: 5px 4px;
+            vertical-align: middle;
         }
 
-        .row-num {
-            color: var(--muted);
-            width: 36px;
+        .items-table td.row-num {
+            color: var(--faint);
+            width: 26px;
             text-align: center;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .items-table input {
+            padding: 8px 10px;
+            font-size: 0.86rem;
+        }
+
+        .col-name {
+            width: 46%;
         }
 
         .btn-bar {
             display: flex;
-            gap: 12px;
+            gap: 11px;
             margin-top: 18px;
             flex-wrap: wrap;
         }
 
         button {
             border: none;
-            border-radius: 8px;
-            padding: 11px 22px;
-            font-size: 0.95rem;
-            font-weight: 600;
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
-            transition: filter 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all .2s ease;
         }
 
-        button:hover {
-            filter: brightness(0.93);
+        button svg {
+            width: 16px;
+            height: 16px;
         }
 
         .btn-primary {
-            background: var(--blue);
+            flex: 1;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
             color: #fff;
+            box-shadow: 0 10px 22px -10px rgba(99, 102, 241, .9);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px -10px rgba(99, 102, 241, 1);
         }
 
         .btn-secondary {
-            background: #f1f5f9;
+            background: var(--card-2);
             color: var(--text);
             border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--brand);
+            color: #fff;
+        }
+
+        /* ── Tabs ───────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            padding: 6px;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: max-content;
+            background: transparent;
+            color: var(--muted);
+            padding: 10px 14px;
+            font-size: 0.86rem;
+            border-radius: 9px;
+            white-space: nowrap;
+        }
+
+        .tab-btn svg {
+            color: currentColor;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            color: #fff;
+            box-shadow: 0 8px 18px -10px rgba(99, 102, 241, .9);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn .4s ease both;
+        }
+
+        .tab-panel.active {
+            display: block;
         }
 
         /* ── Stat cards ─────────────────────── */
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 13px;
         }
 
         .stat-card {
-            background: var(--card);
+            position: relative;
+            background: linear-gradient(180deg, var(--card-2), var(--bg-soft));
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 18px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            overflow: hidden;
         }
 
-        .stat-card .label {
-            font-size: 0.78rem;
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 3px;
+            background: var(--brand);
+        }
+
+        .stat-card.green::before {
+            background: var(--green);
+        }
+
+        .stat-card.violet::before {
+            background: var(--brand-2);
+        }
+
+        .stat-card .s-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--muted);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .stat-card .value {
+        .stat-card .s-label svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .stat-card .s-value {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: -.02em;
         }
 
-        .stat-card.green .value {
-            color: var(--green);
+        .stat-card .s-value small {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
         }
 
-        .stat-card.blue .value {
-            color: var(--blue);
+        .stat-card.green .s-value {
+            color: #34d399;
+        }
+
+        .stat-card.violet .s-value {
+            color: #a78bfa;
+        }
+
+        .section-gap {
+            margin-top: 18px;
         }
 
         /* ── Budget bar ─────────────────────── */
         .budget-bar {
             display: flex;
-            height: 42px;
-            border-radius: 9px;
+            height: 46px;
+            border-radius: 11px;
             overflow: hidden;
             border: 1px solid var(--border);
-            background: #f1f5f9;
+            background: #0c1120;
         }
 
         .budget-seg {
@@ -252,412 +453,809 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding: 0 4px;
+            padding: 0 6px;
+            transition: filter .2s ease;
+        }
+
+        .budget-seg:hover {
+            filter: brightness(1.12);
         }
 
         .budget-rest {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--muted);
-            font-size: 0.75rem;
+            color: var(--faint);
+            font-size: 0.72rem;
+            font-weight: 600;
         }
 
         .bar-caption {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--muted);
-            margin-top: 6px;
+            margin-top: 9px;
+        }
+
+        /* ── Data table ─────────────────────── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .data-table th {
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--faint);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .data-table tbody tr {
+            transition: background .15s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(99, 102, 241, .06);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .total-row td {
+            font-weight: 800;
+            color: #fff;
+            border-top: 1px solid var(--border);
+            background: rgba(16, 185, 129, .06);
+        }
+
+        .num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
         }
 
         /* ── Badges ─────────────────────────── */
         .badge {
-            display: inline-block;
-            padding: 3px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
             border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .badge svg {
+            width: 12px;
+            height: 12px;
         }
 
         .badge.yes {
-            background: var(--green-light);
-            color: #047857;
+            background: var(--green-soft);
+            color: #34d399;
         }
 
         .badge.no {
-            background: #f1f5f9;
+            background: rgba(139, 151, 180, .12);
             color: var(--muted);
         }
 
         .badge.pruned {
-            background: var(--red-light);
-            color: #b91c1c;
+            background: var(--red-soft);
+            color: #fb7185;
         }
 
         .badge.go {
-            background: var(--blue-light);
-            color: #1d4ed8;
+            background: var(--brand-soft);
+            color: #a5b4fc;
         }
 
         /* ── Profit chart ───────────────────── */
         .chart-row {
             display: grid;
-            grid-template-columns: 180px 1fr 70px;
+            grid-template-columns: 150px 1fr 60px;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            font-size: 0.88rem;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
         }
 
         .chart-name {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: var(--muted);
+        }
+
+        .chart-row.is-selected .chart-name {
+            color: var(--text);
+            font-weight: 600;
         }
 
         .chart-track {
-            background: #f1f5f9;
-            border-radius: 6px;
-            height: 22px;
+            background: #0c1120;
+            border: 1px solid var(--border-soft);
+            border-radius: 7px;
+            height: 24px;
             overflow: hidden;
         }
 
         .chart-fill {
             height: 100%;
-            border-radius: 6px;
-            background: #cbd5e1;
-            transition: width 0.6s ease;
+            border-radius: 7px;
+            background: #303b5c;
+            width: 0;
+            animation: grow 0.8s ease forwards;
         }
 
         .chart-fill.selected {
             background: linear-gradient(90deg, var(--green), #34d399);
+            box-shadow: 0 0 16px -2px rgba(16, 185, 129, .5);
+        }
+
+        @keyframes grow {
+            from {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
         }
 
         .chart-val {
             text-align: right;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--muted);
+            font-variant-numeric: tabular-nums;
         }
 
         /* ── Tree ───────────────────────────── */
-        .tree-wrap {
-            overflow-x: auto;
+        .tree-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .zoom-btn {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            background: var(--card-2);
             border: 1px solid var(--border);
-            border-radius: 9px;
-            background: #fcfdfe;
+            color: var(--text);
+        }
+
+        .zoom-btn:hover {
+            border-color: var(--brand);
+            color: #fff;
+        }
+
+        .zoom-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            min-width: 48px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
         }
 
         .legend {
             display: flex;
-            gap: 18px;
+            gap: 16px;
             flex-wrap: wrap;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-left: auto;
         }
 
-        .legend span::before {
-            content: "●";
-            margin-right: 5px;
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .legend .l-path::before {
-            color: var(--green);
+        .legend i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
         }
 
-        .legend .l-pruned::before {
-            color: var(--red);
+        .legend .l-path {
+            background: var(--green);
         }
 
-        .legend .l-normal::before {
-            color: #3b82f6;
+        .legend .l-pruned {
+            background: var(--red);
         }
 
-        /* ── Log table ──────────────────────── */
-        details summary {
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--blue);
-            font-size: 0.92rem;
+        .legend .l-normal {
+            background: var(--brand);
+        }
+
+        .tree-wrap {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background:
+                radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .04) 1px, transparent 0) 0 0 / 22px 22px,
+                #0a0e1a;
+            height: 520px;
+            cursor: grab;
+        }
+
+        .tree-wrap.dragging {
+            cursor: grabbing;
+        }
+
+        .tree-wrap svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: 0 0;
             user-select: none;
         }
 
-        .log-wrap {
-            max-height: 420px;
-            overflow-y: auto;
-            margin-top: 12px;
-            border: 1px solid var(--border);
+        .tree-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            font-size: 0.72rem;
+            color: var(--faint);
+            background: rgba(10, 14, 26, .8);
+            padding: 4px 10px;
             border-radius: 8px;
+            border: 1px solid var(--border-soft);
+            pointer-events: none;
         }
 
-        .log-wrap table {
-            margin: 0;
+        /* ── Log ────────────────────────────── */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
-        .log-wrap th {
+        .filter-btn {
+            background: var(--card-2);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            border-radius: 9px;
+        }
+
+        .filter-btn:hover {
+            color: var(--text);
+        }
+
+        .filter-btn.active {
+            background: var(--brand-soft);
+            border-color: var(--brand);
+            color: #c7cdff;
+        }
+
+        .log-wrap {
+            max-height: 460px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .log-wrap .data-table {
+            font-size: 0.83rem;
+        }
+
+        .log-wrap thead th {
             position: sticky;
             top: 0;
+            background: var(--card);
+            z-index: 1;
+        }
+
+        .log-wrap td {
+            padding: 9px 12px;
+        }
+
+        .mono {
+            font-variant-numeric: tabular-nums;
         }
 
         .empty-msg {
-            background: #fffbeb;
-            border: 1px solid #fde68a;
-            color: #92400e;
-            border-radius: 9px;
-            padding: 14px 16px;
-            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(245, 158, 11, .1);
+            border: 1px solid rgba(245, 158, 11, .3);
+            color: #fcd34d;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 0.9rem;
+        }
+
+        .empty-msg svg {
+            width: 22px;
+            height: 22px;
+            flex: none;
+        }
+
+        /* scrollbars */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+            border: 2px solid var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #33406b;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="shell {{ 'has-results' if output }}">
         <header>
-            <h1>📊 Simulasi <span class="accent">Pemilihan Proyek</span> — Knapsack 0/1</h1>
+            <span class="brand-mark">
+                <!-- bar chart icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="10" />
+                    <line x1="18" y1="20" x2="18" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="16" />
+                </svg>
+            </span>
+            <h1>Simulasi <span class="accent">Pemilihan Proyek</span> — Knapsack 0/1</h1>
             <p>Backtracking + Branch &amp; Bound · Pilih kombinasi proyek dengan profit (P) maksimal
                 tanpa melebihi batas waktu (W = durasi/hari) yang tersedia.</p>
         </header>
 
-        <!-- ── Input ─────────────────────────── -->
-        <form method="POST" class="card">
-            <h2>📝 Data Proyek</h2>
-            <div class="form-row">
-                <div class="field">
-                    <label for="budget">Batas Waktu Tersedia (hari)</label>
-                    <input type="number" id="budget" name="budget" min="1" required
-                        value="{{ budget if budget else '' }}" placeholder="contoh: 30" />
-                </div>
-                <div class="field">
-                    <label for="itemCount">Jumlah Proyek (min. 8)</label>
-                    <input type="number" id="itemCount" name="itemCount" min="8" value="8" required />
-                </div>
-            </div>
+        <div class="layout">
+            <!-- ── Form pane ─────────────────────── -->
+            <aside class="form-pane">
+                <form method="POST" class="card">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
+                        </svg>
+                        Data Proyek
+                    </h2>
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="budget">Batas Waktu Tersedia (hari)</label>
+                            <input type="number" id="budget" name="budget" min="1" required
+                                value="{{ budget if budget else '' }}" placeholder="contoh: 30" />
+                        </div>
+                        <div class="field">
+                            <label for="itemCount">Jumlah Proyek (min. 8)</label>
+                            <input type="number" id="itemCount" name="itemCount" min="8" value="8" required />
+                        </div>
+                    </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th class="row-num">#</th>
-                        <th>Nama Proyek</th>
-                        <th>Profit (P)</th>
-                        <th>Durasi / hari (W)</th>
-                    </tr>
-                </thead>
-                <tbody id="itemsTableBody"></tbody>
-            </table>
-
-            <div class="btn-bar">
-                <button type="button" class="btn-secondary" id="fillSample">✨ Isi Contoh Data</button>
-                <button type="submit" class="btn-primary">🔍 Hitung Kombinasi Optimal</button>
-            </div>
-        </form>
-
-        {% if output %}
-        <!-- ── Ringkasan ─────────────────────── -->
-        <div class="stat-grid fade-in">
-            <div class="stat-card green">
-                <div class="label">Total Profit</div>
-                <div class="value">{{ output.total_profit }}</div>
-            </div>
-            <div class="stat-card blue">
-                <div class="label">Durasi Terpakai</div>
-                <div class="value">{{ output.total_duration }} / {{ budget }} hari</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Sisa Waktu</div>
-                <div class="value">{{ output.remaining }} hari</div>
-            </div>
-        </div>
-
-        {% if output.selected %}
-        <!-- ── Timeline budget ───────────────── -->
-        <div class="card fade-in">
-            <h2>📅 Timeline Penggunaan Waktu</h2>
-            <div class="budget-bar">
-                {% set palette = ['#2563eb', '#10b981', '#0ea5e9', '#34d399', '#6366f1', '#14b8a6'] %}
-                {% for p in output.selected %}
-                <div class="budget-seg" style="width: {{ p.duration / budget * 100 }}%;
-                        background: {{ palette[loop.index0 % palette|length] }};"
-                    title="{{ p.name }} — {{ p.duration }} hari">
-                    {{ p.name }} ({{ p.duration }}h)
-                </div>
-                {% endfor %}
-                {% if output.remaining > 0 %}
-                <div class="budget-rest" style="width: {{ output.remaining / budget * 100 }}%;">
-                    sisa {{ output.remaining }}h
-                </div>
-                {% endif %}
-            </div>
-            <div class="bar-caption">
-                <span>{{ output.used_percent }}% budget waktu terpakai</span>
-                <span>{{ budget }} hari tersedia</span>
-            </div>
-        </div>
-
-        <!-- ── Solusi optimal ────────────────── -->
-        <div class="card fade-in">
-            <h2>🏆 Proyek Terpilih (Solusi Optimal)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Proyek</th>
-                        <th>Durasi (hari)</th>
-                        <th>Profit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in output.selected %}
-                    <tr>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.duration }}</td>
-                        <td>{{ p.profit }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                        <td><b>TOTAL</b></td>
-                        <td><b>{{ output.total_duration }}</b></td>
-                        <td><b>{{ output.total_profit }}</b></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="empty-msg fade-in">
-            ⚠️ Tidak ada proyek yang dapat dipilih — semua durasi proyek melebihi batas waktu
-            {{ budget }} hari.
-        </div>
-        {% endif %}
-
-        <!-- ── Tabel rasio ───────────────────── -->
-        <div class="card fade-in">
-            <h2>📈 Urutan Proyek Berdasarkan Rasio Profit/Hari</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="row-num">#</th>
-                        <th>Nama Proyek</th>
-                        <th>Profit (P)</th>
-                        <th>Durasi (W)</th>
-                        <th>Rasio P/W</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in sorted_projects %}
-                    <tr>
-                        <td class="row-num">{{ loop.index }}</td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.profit }}</td>
-                        <td>{{ p.duration }}</td>
-                        <td>{{ p.ratio }}</td>
-                        <td>
-                            {% if p.selected %}
-                            <span class="badge yes">✅ Dipilih</span>
-                            {% else %}
-                            <span class="badge no">Tidak</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ── Grafik profit ─────────────────── -->
-        <div class="card fade-in">
-            <h2>💰 Perbandingan Profit Antar Proyek</h2>
-            {% set max_profit = sorted_projects | map(attribute='profit') | max %}
-            {% for p in sorted_projects %}
-            <div class="chart-row">
-                <div class="chart-name" title="{{ p.name }}">{{ p.name }}</div>
-                <div class="chart-track">
-                    <div class="chart-fill {{ 'selected' if p.selected }}"
-                        style="width: {{ p.profit / max_profit * 100 }}%;"></div>
-                </div>
-                <div class="chart-val">{{ p.profit }}</div>
-            </div>
-            {% endfor %}
-            <div class="bar-caption">
-                <span><span class="badge yes">hijau</span> = terpilih &nbsp;
-                    <span class="badge no">abu</span> = tidak terpilih</span>
-            </div>
-        </div>
-
-        <!-- ── Pohon B&B ─────────────────────── -->
-        <div class="card fade-in">
-            <h2>🌳 Pohon Eksplorasi Branch &amp; Bound</h2>
-            <div class="legend">
-                <span class="l-path">jalur solusi optimal</span>
-                <span class="l-pruned">node dipangkas (pruned ✂)</span>
-                <span class="l-normal">node dieksplorasi</span>
-                <span>— garis solid = INCLUDE, putus-putus = EXCLUDE</span>
-            </div>
-            <div class="tree-wrap" id="treeWrap"></div>
-        </div>
-
-        <!-- ── Log langkah ───────────────────── -->
-        <div class="card fade-in">
-            <h2>🔬 Langkah-Langkah Algoritma</h2>
-            <details>
-                <summary>Tampilkan {{ exploration_log | length }} langkah eksplorasi</summary>
-                <div class="log-wrap">
-                    <table>
+                    <table class="items-table">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Aksi</th>
-                                <th>Posisi Item</th>
-                                <th>Profit Sejauh Ini</th>
-                                <th>Durasi Sejauh Ini</th>
-                                <th>Upper Bound</th>
-                                <th>Status</th>
+                                <th class="row-num">#</th>
+                                <th class="col-name">Nama Proyek</th>
+                                <th>Profit (P)</th>
+                                <th>Durasi (W)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for e in exploration_log %}
-                            <tr>
-                                <td>{{ e.node_id }}</td>
-                                <td>{{ e.action }}</td>
-                                <td>{{ e.item_name }}</td>
-                                <td>{{ e.profit_so_far }}</td>
-                                <td>{{ e.weight_so_far }}</td>
-                                <td>{{ e.upper_bound }}</td>
-                                <td>
-                                    {% if e.pruned %}
-                                    <span class="badge pruned">✂ Pruned</span>
-                                    {% else %}
-                                    <span class="badge go">Lanjut</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
+                        <tbody id="itemsTableBody"></tbody>
                     </table>
-                </div>
-            </details>
-        </div>
 
-        <!-- ── Statistik ─────────────────────── -->
-        <div class="stat-grid fade-in">
-            <div class="stat-card blue">
-                <div class="label">Node Dikunjungi</div>
-                <div class="value">{{ stats.node_count }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Node Dipangkas</div>
-                <div class="value">{{ stats.pruned_count }}</div>
-            </div>
-            <div class="stat-card green">
-                <div class="label">Waktu Eksekusi</div>
-                <div class="value">{{ stats.elapsed_ms }} ms</div>
-            </div>
+                    <div class="btn-bar">
+                        <button type="button" class="btn-secondary" id="fillSample">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                            </svg>
+                            Isi Contoh Data
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.3-4.3" />
+                            </svg>
+                            Hitung Kombinasi Optimal
+                        </button>
+                    </div>
+                </form>
+            </aside>
+
+            {% if output %}
+            <!-- ── Results pane ──────────────────── -->
+            <main class="results-pane fade-in">
+                <nav class="tabs" role="tablist">
+                    <button type="button" class="tab-btn active" data-tab="overview">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9" rx="1" />
+                            <rect x="14" y="3" width="7" height="5" rx="1" />
+                            <rect x="14" y="12" width="7" height="9" rx="1" />
+                            <rect x="3" y="16" width="7" height="5" rx="1" />
+                        </svg>
+                        Ringkasan
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="analysis">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18" />
+                            <path d="m19 9-5 5-4-4-3 3" />
+                        </svg>
+                        Analisis
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="tree">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="5" r="2.5" />
+                            <circle cx="6" cy="19" r="2.5" />
+                            <circle cx="18" cy="19" r="2.5" />
+                            <path d="M12 7.5v3M12 10.5 6.8 16.7M12 10.5l5.2 6.2" />
+                        </svg>
+                        Pohon B&amp;B
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="log">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6" />
+                            <line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" />
+                            <line x1="3" y1="6" x2="3.01" y2="6" />
+                            <line x1="3" y1="12" x2="3.01" y2="12" />
+                            <line x1="3" y1="18" x2="3.01" y2="18" />
+                        </svg>
+                        Log Simulasi
+                    </button>
+                </nav>
+
+                <!-- ── TAB 1: Overview ───────────── -->
+                <section class="tab-panel active" data-panel="overview">
+                    <div class="stat-grid">
+                        <div class="stat-card green">
+                            <div class="s-label">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                </svg>
+                                Total Profit
+                            </div>
+                            <div class="s-value">{{ output.total_profit }}</div>
+                        </div>
+                        <div class="stat-card violet">
+                            <div class="s-label">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <polyline points="12 7 12 12 15 14" />
+                                </svg>
+                                Durasi Terpakai
+                            </div>
+                            <div class="s-value">{{ output.total_duration }}<small> / {{ budget }} hari</small></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="s-label">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" />
+                                </svg>
+                                Sisa Waktu
+                            </div>
+                            <div class="s-value">{{ output.remaining }}<small> hari</small></div>
+                        </div>
+                    </div>
+
+                    {% if output.selected %}
+                    <div class="card section-gap">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            Timeline Penggunaan Waktu
+                        </h2>
+                        <div class="budget-bar">
+                            {% set palette = ['#6366f1', '#10b981', '#0ea5e9', '#8b5cf6', '#14b8a6', '#f59e0b'] %}
+                            {% for p in output.selected %}
+                            <div class="budget-seg" style="width: {{ p.duration / budget * 100 }}%;
+                                    background: {{ palette[loop.index0 % palette|length] }};"
+                                title="{{ p.name }} — {{ p.duration }} hari">
+                                {{ p.name }} ({{ p.duration }}h)
+                            </div>
+                            {% endfor %}
+                            {% if output.remaining > 0 %}
+                            <div class="budget-rest" style="width: {{ output.remaining / budget * 100 }}%;">
+                                sisa {{ output.remaining }}h
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="bar-caption">
+                            <span>{{ output.used_percent }}% budget waktu terpakai</span>
+                            <span>{{ budget }} hari tersedia</span>
+                        </div>
+                    </div>
+
+                    <div class="card section-gap">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                                <path d="M4 22h16" />
+                                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                            </svg>
+                            Proyek Terpilih (Solusi Optimal)
+                        </h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Proyek</th>
+                                    <th class="num">Durasi (hari)</th>
+                                    <th class="num">Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in output.selected %}
+                                <tr>
+                                    <td>{{ p.name }}</td>
+                                    <td class="num">{{ p.duration }}</td>
+                                    <td class="num">{{ p.profit }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="total-row">
+                                    <td>TOTAL</td>
+                                    <td class="num">{{ output.total_duration }}</td>
+                                    <td class="num">{{ output.total_profit }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-msg section-gap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                        <span>Tidak ada proyek yang dapat dipilih — semua durasi proyek melebihi batas waktu
+                            {{ budget }} hari.</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="stat-grid section-gap">
+                        <div class="stat-card violet">
+                            <div class="s-label">Node Dikunjungi</div>
+                            <div class="s-value">{{ stats.node_count }}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="s-label">Node Dipangkas</div>
+                            <div class="s-value">{{ stats.pruned_count }}</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="s-label">Waktu Eksekusi</div>
+                            <div class="s-value">{{ stats.elapsed_ms }}<small> ms</small></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── TAB 2: Analysis ───────────── -->
+                <section class="tab-panel" data-panel="analysis">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="20" x2="12" y2="10" />
+                                <line x1="18" y1="20" x2="18" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="16" />
+                            </svg>
+                            Perbandingan Profit Antar Proyek
+                        </h2>
+                        {% set max_profit = sorted_projects | map(attribute='profit') | max %}
+                        {% for p in sorted_projects %}
+                        <div class="chart-row {{ 'is-selected' if p.selected }}">
+                            <div class="chart-name" title="{{ p.name }}">{{ p.name }}</div>
+                            <div class="chart-track">
+                                <div class="chart-fill {{ 'selected' if p.selected }}"
+                                    style="width: {{ p.profit / max_profit * 100 }}%;"></div>
+                            </div>
+                            <div class="chart-val">{{ p.profit }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card section-gap">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18M7 12h10M10 18h4" />
+                            </svg>
+                            Urutan Proyek Berdasarkan Rasio Profit/Hari
+                        </h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="row-num">#</th>
+                                    <th>Nama Proyek</th>
+                                    <th class="num">Profit (P)</th>
+                                    <th class="num">Durasi (W)</th>
+                                    <th class="num">Rasio P/W</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in sorted_projects %}
+                                <tr>
+                                    <td class="row-num">{{ loop.index }}</td>
+                                    <td>{{ p.name }}</td>
+                                    <td class="num">{{ p.profit }}</td>
+                                    <td class="num">{{ p.duration }}</td>
+                                    <td class="num">{{ p.ratio }}</td>
+                                    <td>
+                                        {% if p.selected %}
+                                        <span class="badge yes">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            Dipilih
+                                        </span>
+                                        {% else %}
+                                        <span class="badge no">Tidak</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ── TAB 3: Tree ───────────────── -->
+                <section class="tab-panel" data-panel="tree">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="5" r="2.5" />
+                                <circle cx="6" cy="19" r="2.5" />
+                                <circle cx="18" cy="19" r="2.5" />
+                                <path d="M12 7.5v3M12 10.5 6.8 16.7M12 10.5l5.2 6.2" />
+                            </svg>
+                            Pohon Eksplorasi Branch &amp; Bound
+                        </h2>
+                        <div class="tree-toolbar">
+                            <button type="button" class="zoom-btn" id="zoomOut" title="Perkecil">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                            </button>
+                            <span class="zoom-label" id="zoomLabel">100%</span>
+                            <button type="button" class="zoom-btn" id="zoomIn" title="Perbesar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12"
+                                        x2="19" y2="12" /></svg>
+                            </button>
+                            <button type="button" class="zoom-btn" id="zoomReset" title="Reset tampilan">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                    <path d="M3 3v5h5" />
+                                </svg>
+                            </button>
+                            <div class="legend">
+                                <span><i class="l-path"></i>jalur optimal</span>
+                                <span><i class="l-pruned"></i>dipangkas</span>
+                                <span><i class="l-normal"></i>dieksplorasi</span>
+                            </div>
+                        </div>
+                        <div class="tree-wrap" id="treeWrap">
+                            <div class="tree-hint">Seret untuk menggeser · scroll untuk zoom</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── TAB 4: Log ────────────────── -->
+                <section class="tab-panel" data-panel="log">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                            </svg>
+                            Langkah-Langkah Algoritma ({{ exploration_log | length }} langkah)
+                        </h2>
+                        <div class="filter-bar">
+                            <button type="button" class="filter-btn active" data-filter="all">Semua Langkah</button>
+                            <button type="button" class="filter-btn" data-filter="pruned">Hanya Dipangkas</button>
+                            <button type="button" class="filter-btn" data-filter="path">Hanya Jalur Solusi</button>
+                        </div>
+                        <div class="log-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Aksi</th>
+                                        <th>Posisi Item</th>
+                                        <th class="num">Profit</th>
+                                        <th class="num">Durasi</th>
+                                        <th class="num">Upper Bound</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logBody">
+                                    {% for e in exploration_log %}
+                                    <tr data-node="{{ e.node_id }}" data-pruned="{{ '1' if e.pruned else '0' }}">
+                                        <td class="mono">{{ e.node_id }}</td>
+                                        <td>{{ e.action }}</td>
+                                        <td>{{ e.item_name }}</td>
+                                        <td class="num">{{ e.profit_so_far }}</td>
+                                        <td class="num">{{ e.weight_so_far }}</td>
+                                        <td class="num">{{ e.upper_bound }}</td>
+                                        <td>
+                                            {% if e.pruned %}
+                                            <span class="badge pruned">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="6" cy="6" r="3" />
+                                                    <circle cx="6" cy="18" r="3" />
+                                                    <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                                                    <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                                                    <line x1="8.12" y1="8.12" x2="12" y2="12" />
+                                                </svg>
+                                                Pruned
+                                            </span>
+                                            {% else %}
+                                            <span class="badge go">Lanjut</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 
     <script>
@@ -674,11 +1272,11 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td class="row-num">${i}</td>
-                    <td><input type="text" name="name${i}" placeholder="Nama proyek ${i}" required
-                        value="${d ? d.name.replace(/"/g, '&quot;') : ''}"></td>
+                    <td class="col-name"><input type="text" name="name${i}" placeholder="Nama proyek ${i}" required
+                        value="${d ? String(d.name).replace(/"/g, '&quot;') : ''}"></td>
                     <td><input type="number" name="profit${i}" min="1" placeholder="P" required
                         value="${d ? d.profit : ''}"></td>
-                    <td><input type="number" name="duration${i}" min="1" placeholder="W (hari)" required
+                    <td><input type="number" name="duration${i}" min="1" placeholder="W" required
                         value="${d ? d.duration : ''}"></td>
                 `;
                 tbody.appendChild(row);
@@ -716,15 +1314,120 @@
                 }
             });
 
-            if (TREE) renderTree(TREE);
+            initTabs();
+            initLogFilter();
+            if (TREE) {
+                renderTree(TREE);
+                initTreeControls();
+            }
         });
+
+        // ── Tab switching ──────────────────────────────────────
+        function initTabs() {
+            const btns = document.querySelectorAll(".tab-btn");
+            const panels = document.querySelectorAll(".tab-panel");
+            btns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const tab = btn.dataset.tab;
+                    btns.forEach(b => b.classList.toggle("active", b === btn));
+                    panels.forEach(p => p.classList.toggle("active", p.dataset.panel === tab));
+                });
+            });
+        }
+
+        // ── Log filter ─────────────────────────────────────────
+        function initLogFilter() {
+            const filterBtns = document.querySelectorAll(".filter-btn");
+            const body = document.getElementById("logBody");
+            if (!body) return;
+
+            // Kumpulkan node_id yang berada di jalur solusi optimal dari TREE.
+            const pathIds = new Set();
+            if (TREE) {
+                (function walk(n) {
+                    if (n.on_path) pathIds.add(String(n.id));
+                    n.children.forEach(walk);
+                })(TREE);
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    filterBtns.forEach(b => b.classList.toggle("active", b === btn));
+                    const mode = btn.dataset.filter;
+                    body.querySelectorAll("tr").forEach(tr => {
+                        let show = true;
+                        if (mode === "pruned") show = tr.dataset.pruned === "1";
+                        else if (mode === "path") show = pathIds.has(tr.dataset.node);
+                        tr.style.display = show ? "" : "none";
+                    });
+                });
+            });
+        }
+
+        // ── Tree zoom & pan ────────────────────────────────────
+        let treeState = { scale: 1, x: 0, y: 0, svg: null };
+
+        function applyTreeTransform() {
+            if (!treeState.svg) return;
+            treeState.svg.style.transform =
+                `translate(${treeState.x}px, ${treeState.y}px) scale(${treeState.scale})`;
+            const lbl = document.getElementById("zoomLabel");
+            if (lbl) lbl.textContent = Math.round(treeState.scale * 100) + "%";
+        }
+
+        function initTreeControls() {
+            const wrap = document.getElementById("treeWrap");
+            if (!wrap || !treeState.svg) return;
+
+            const setScale = (s) => {
+                treeState.scale = Math.min(2.5, Math.max(0.25, s));
+                applyTreeTransform();
+            };
+
+            document.getElementById("zoomIn").addEventListener("click", () => setScale(treeState.scale * 1.2));
+            document.getElementById("zoomOut").addEventListener("click", () => setScale(treeState.scale / 1.2));
+            document.getElementById("zoomReset").addEventListener("click", () => {
+                treeState.x = 0; treeState.y = 0; setScale(1);
+            });
+
+            // Wheel zoom (terpusat di kursor)
+            wrap.addEventListener("wheel", (e) => {
+                e.preventDefault();
+                const rect = wrap.getBoundingClientRect();
+                const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+                const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+                const newScale = Math.min(2.5, Math.max(0.25, treeState.scale * factor));
+                const ratio = newScale / treeState.scale;
+                treeState.x = mx - (mx - treeState.x) * ratio;
+                treeState.y = my - (my - treeState.y) * ratio;
+                treeState.scale = newScale;
+                applyTreeTransform();
+            }, { passive: false });
+
+            // Drag pan
+            let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+            wrap.addEventListener("pointerdown", (e) => {
+                dragging = true; sx = e.clientX; sy = e.clientY;
+                ox = treeState.x; oy = treeState.y;
+                wrap.classList.add("dragging");
+                wrap.setPointerCapture(e.pointerId);
+            });
+            wrap.addEventListener("pointermove", (e) => {
+                if (!dragging) return;
+                treeState.x = ox + (e.clientX - sx);
+                treeState.y = oy + (e.clientY - sy);
+                applyTreeTransform();
+            });
+            const endDrag = () => { dragging = false; wrap.classList.remove("dragging"); };
+            wrap.addEventListener("pointerup", endDrag);
+            wrap.addEventListener("pointercancel", endDrag);
+        }
 
         // ── Pohon B&B (SVG) ────────────────────────────────────
         function renderTree(root) {
             const wrap = document.getElementById("treeWrap");
             if (!wrap) return;
 
-            // Hitung jumlah node; batasi agar browser tidak berat
             let nodeCount = 0, maxDepth = 0;
             (function count(n) {
                 nodeCount++;
@@ -733,13 +1436,12 @@
             })(root);
 
             if (nodeCount > 2000) {
-                wrap.innerHTML = '<p style="padding:14px;color:var(--muted)">Pohon terlalu besar untuk digambar (' +
-                    nodeCount + ' node). Lihat tabel langkah algoritma di bawah.</p>';
+                wrap.innerHTML = '<p style="padding:18px;color:var(--muted)">Pohon terlalu besar untuk digambar (' +
+                    nodeCount + ' node). Lihat tab Log Simulasi untuk detail langkah.</p>';
                 return;
             }
 
-            // Layout: x via leaf-counter (post-order), y = depth
-            const GX = 64, GY = 92, R = 17, PAD = 40;
+            const GX = 70, GY = 96, R = 18, PAD = 44;
             let leafX = 0;
             (function assign(n) {
                 n.children.forEach(assign);
@@ -759,6 +1461,15 @@
             const svg = document.createElementNS(NS, "svg");
             svg.setAttribute("width", width);
             svg.setAttribute("height", height);
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+            // Glow filter untuk node
+            const defs = document.createElementNS(NS, "defs");
+            defs.innerHTML =
+                '<filter id="glow" x="-60%" y="-60%" width="220%" height="220%">' +
+                '<feGaussianBlur stdDeviation="3.2" result="b"/>' +
+                '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+            svg.appendChild(defs);
 
             // Edges
             (function drawEdges(n) {
@@ -769,9 +1480,10 @@
                     line.setAttribute("x2", px(c));
                     line.setAttribute("y2", py(c) - R);
                     const onPath = n.on_path && c.on_path;
-                    line.setAttribute("stroke", onPath ? "#10b981" : "#94a3b8");
-                    line.setAttribute("stroke-width", onPath ? 2.5 : 1.3);
-                    if (c.action === "EXCLUDE") line.setAttribute("stroke-dasharray", "5 4");
+                    line.setAttribute("stroke", onPath ? "#10b981" : "#39456b");
+                    line.setAttribute("stroke-width", onPath ? 3 : 1.4);
+                    line.setAttribute("stroke-linecap", "round");
+                    if (c.action === "EXCLUDE") line.setAttribute("stroke-dasharray", "5 5");
                     svg.appendChild(line);
                     drawEdges(c);
                 });
@@ -784,41 +1496,57 @@
                 circle.setAttribute("cx", px(n));
                 circle.setAttribute("cy", py(n));
                 circle.setAttribute("r", R);
-                let fill = "#dbeafe", stroke = "#3b82f6";
-                if (n.pruned) { fill = "#fee2e2"; stroke = "#ef4444"; }
-                else if (n.on_path) { fill = "#d1fae5"; stroke = "#10b981"; }
+                let fill = "#1c2742", stroke = "#6366f1";
+                if (n.pruned) { fill = "#2a1620"; stroke = "#f43f5e"; }
+                else if (n.on_path) { fill = "#0f2a22"; stroke = "#10b981"; }
                 circle.setAttribute("fill", fill);
                 circle.setAttribute("stroke", stroke);
-                circle.setAttribute("stroke-width", n.on_path ? 2.5 : 1.5);
+                circle.setAttribute("stroke-width", n.on_path || n.pruned ? 2.6 : 1.6);
+                if (n.on_path) circle.setAttribute("filter", "url(#glow)");
                 g.appendChild(circle);
 
-                // Label profit di dalam node
-                const txt = document.createElementNS(NS, "text");
-                txt.setAttribute("x", px(n));
-                txt.setAttribute("y", py(n) + 4);
-                txt.setAttribute("text-anchor", "middle");
-                txt.setAttribute("font-size", "10.5");
-                txt.setAttribute("font-weight", "600");
-                txt.setAttribute("fill", "#1e293b");
-                txt.textContent = n.profit;
-                g.appendChild(txt);
+                // Tanda silang merah untuk node dipangkas
+                if (n.pruned) {
+                    const d = R * 0.42;
+                    [[-d, -d, d, d], [-d, d, d, -d]].forEach(([x1, y1, x2, y2]) => {
+                        const cross = document.createElementNS(NS, "line");
+                        cross.setAttribute("x1", px(n) + x1);
+                        cross.setAttribute("y1", py(n) + y1);
+                        cross.setAttribute("x2", px(n) + x2);
+                        cross.setAttribute("y2", py(n) + y2);
+                        cross.setAttribute("stroke", "#fb7185");
+                        cross.setAttribute("stroke-width", 1.8);
+                        cross.setAttribute("stroke-linecap", "round");
+                        g.appendChild(cross);
+                    });
+                } else {
+                    const txt = document.createElementNS(NS, "text");
+                    txt.setAttribute("x", px(n));
+                    txt.setAttribute("y", py(n) + 4);
+                    txt.setAttribute("text-anchor", "middle");
+                    txt.setAttribute("font-size", "11");
+                    txt.setAttribute("font-weight", "700");
+                    txt.setAttribute("font-family", "Plus Jakarta Sans, sans-serif");
+                    txt.setAttribute("fill", n.on_path ? "#6ee7b7" : "#c7d0e8");
+                    txt.textContent = n.profit;
+                    g.appendChild(txt);
+                }
 
-                // Upper bound di bawah node
                 const ub = document.createElementNS(NS, "text");
                 ub.setAttribute("x", px(n));
-                ub.setAttribute("y", py(n) + R + 13);
+                ub.setAttribute("y", py(n) + R + 14);
                 ub.setAttribute("text-anchor", "middle");
-                ub.setAttribute("font-size", "9");
-                ub.setAttribute("fill", "#64748b");
-                ub.textContent = n.pruned ? "✂ " + n.bound.toFixed(0) : "UB " + n.bound.toFixed(0);
+                ub.setAttribute("font-size", "9.5");
+                ub.setAttribute("font-family", "Plus Jakarta Sans, sans-serif");
+                ub.setAttribute("fill", n.pruned ? "#fb7185" : "#7c89ad");
+                ub.textContent = (n.pruned ? "✕ " : "UB ") + n.bound.toFixed(0);
                 g.appendChild(ub);
 
-                // Tooltip detail
                 const title = document.createElementNS(NS, "title");
                 title.textContent =
                     `Node #${n.id} (${n.action})\n` +
                     `Item: ${n.item}\nProfit: ${n.profit} | Durasi: ${n.weight} hari\n` +
-                    `Upper bound: ${n.bound}` + (n.pruned ? "\n✂ DIPANGKAS" : "");
+                    `Upper bound: ${n.bound}` + (n.pruned ? "\nDIPANGKAS" : "");
                 g.appendChild(title);
 
                 svg.appendChild(g);
@@ -826,6 +1554,15 @@
             })(root);
 
             wrap.appendChild(svg);
+            treeState.svg = svg;
+
+            // Posisi awal: center horizontal, sedikit margin atas
+            requestAnimationFrame(() => {
+                const ww = wrap.clientWidth;
+                treeState.x = Math.max(12, (ww - width) / 2);
+                treeState.y = 12;
+                applyTreeTransform();
+            });
         }
     </script>
 </body>
