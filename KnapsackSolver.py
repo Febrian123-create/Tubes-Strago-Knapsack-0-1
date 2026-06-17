@@ -41,7 +41,7 @@ class KnapsackSolver:
     def _bound(self, index: int, weight: int, profit: int) -> float:
         """Upper-bound (fractional knapsack) dari posisi `index`."""
         if weight >= self.capacity:
-            return 0.0
+            return float(profit)
 
         bound_val = profit
         total_weight = weight

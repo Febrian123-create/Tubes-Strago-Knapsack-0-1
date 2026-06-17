@@ -7,7 +7,8 @@
     <title>Simulasi Pemilihan Proyek-Knapsack 0/1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -978,6 +979,12 @@
                     {% endif %}
 
                     <div class="stat-grid section-gap">
+                        <div class="stat-card">
+                            <div class="s-label">Metode Pencarian</div>
+                            <div class="s-value"
+                                style="font-size: 1.05rem; padding-top: 6px; font-weight: 700; color: var(--brand-2);">
+                                Branch &amp; Bound (DFS)</div>
+                        </div>
                         <div class="stat-card violet">
                             <div class="s-label">Node Dikunjungi</div>
                             <div class="s-value">{{ stats.node_count }}</div>
@@ -1038,8 +1045,8 @@
                                     <td>
                                         {% if p.selected %}
                                         <span class="badge yes">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                                stroke-linecap="round" stroke-linejoin="round">
                                                 <polyline points="20 6 9 17 4 12" />
                                             </svg>
                                             Dipilih
@@ -1191,7 +1198,7 @@
             });
 
             document.getElementById("resetBtn").addEventListener("click", function () {
-                location.reload();
+                window.location.href = "/";
             });
 
             document.querySelector("form").addEventListener("submit", function (e) {
@@ -1386,16 +1393,17 @@
                 circle.setAttribute("cy", py(n));
                 circle.setAttribute("r", R);
                 let fill = "#f9f7f3", stroke = "#b8956a";
-                if (n.pruned) { fill = "#ede8df"; stroke = "#c97070"; }
+                const isPrunedShow = n.pruned && !n.on_path;
+                if (isPrunedShow) { fill = "#ede8df"; stroke = "#c97070"; }
                 else if (n.on_path) { fill = "#e8f5ec"; stroke = "#7a9e7f"; }
                 circle.setAttribute("fill", fill);
                 circle.setAttribute("stroke", stroke);
-                circle.setAttribute("stroke-width", n.on_path || n.pruned ? 2.6 : 1.6);
+                circle.setAttribute("stroke-width", n.on_path || isPrunedShow ? 2.6 : 1.6);
                 if (n.on_path) circle.setAttribute("filter", "url(#glow)");
                 g.appendChild(circle);
 
                 // Tanda silang merah untuk node dipangkas
-                if (n.pruned) {
+                if (isPrunedShow) {
                     const d = R * 0.42;
                     [[-d, -d, d, d], [-d, d, d, -d]].forEach(([x1, y1, x2, y2]) => {
                         const cross = document.createElementNS(NS, "line");
@@ -1427,8 +1435,8 @@
                 ub.setAttribute("text-anchor", "middle");
                 ub.setAttribute("font-size", "9.5");
                 ub.setAttribute("font-family", "Inter, sans-serif");
-                ub.setAttribute("fill", n.pruned ? "#a86464" : "#b0a89d");
-                ub.textContent = (n.pruned ? "✕ " : "UB ") + n.bound.toFixed(0);
+                ub.setAttribute("fill", isPrunedShow ? "#a86464" : "#b0a89d");
+                ub.textContent = (isPrunedShow ? "✕ " : "UB ") + n.bound.toFixed(0);
                 g.appendChild(ub);
 
                 const title = document.createElementNS(NS, "title");
