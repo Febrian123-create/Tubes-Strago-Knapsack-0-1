@@ -26,6 +26,8 @@ def build_tree(exploration_log: list[dict], best_items: list[int]) -> dict | Non
             "profit": entry["profit_so_far"],
             "weight": entry["weight_so_far"],
             "action": entry["action"],
+            "bound": entry["upper_bound"],
+            "pruned": entry["pruned"],
             "on_path": False,
             "children": [],
         }
