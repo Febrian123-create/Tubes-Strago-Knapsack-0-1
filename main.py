@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 def build_tree(exploration_log: list[dict], best_items: list[int]) -> dict | None:
-    """Rekonstruksi pohon eksplorasi B&B dari exploration_log.
+    """Rekonstruksi pohon eksplorasi backtracking dari exploration_log.
 
     Log ditulis pre-order (INCLUDE dieksplorasi sebelum EXCLUDE), sehingga
     parent-child dapat direkonstruksi dengan stack berdasarkan depth.
@@ -25,8 +25,6 @@ def build_tree(exploration_log: list[dict], best_items: list[int]) -> dict | Non
             "item": entry["item_name"],
             "profit": entry["profit_so_far"],
             "weight": entry["weight_so_far"],
-            "bound": entry["upper_bound"],
-            "pruned": entry["pruned"],
             "action": entry["action"],
             "on_path": False,
             "children": [],
@@ -115,10 +113,8 @@ def home():
         }
 
         exploration_log = solver.exploration_log
-        pruned_count = sum(1 for e in exploration_log if e["pruned"])
         stats = {
             "node_count": solver.node_count,
-            "pruned_count": pruned_count,
             "elapsed_ms": round(solver.elapsed_ms, 3),
         }
         tree = build_tree(exploration_log, solver.best_items)
