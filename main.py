@@ -27,7 +27,9 @@ def build_tree(exploration_log: list[dict], best_items: list[int]) -> dict | Non
             "weight": entry["weight_so_far"],
             "action": entry["action"],
             "bound": entry["upper_bound"],
+            "best_at_visit": entry.get("best_profit_so_far", 0),
             "pruned": entry["pruned"],
+            "is_overweight": entry.get("is_overweight", False),
             "on_path": False,
             "children": [],
         }

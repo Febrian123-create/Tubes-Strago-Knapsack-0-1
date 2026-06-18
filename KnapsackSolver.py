@@ -55,19 +55,29 @@ class KnapsackSolver:
 
         is_leaf   = index == len(self.items)
         item_name = "LEAF" if is_leaf else self.items[index].name
+        
+        # Hitung upper bound
         ub        = self._bound(index, weight, profit)
-        pruned    = (not is_leaf) and (ub <= self.best_profit)
+        
+        # Node dipangkas jika melebihi kapasitas ATAU upper bound <= profit terbaik saat ini
+        is_overweight = weight > self.capacity
+        pruned    = is_overweight or ((not is_leaf) and (ub <= self.best_profit))
 
         self.exploration_log.append({
-            "node_id":       self.node_count,
-            "depth":         index,
-            "item_name":     item_name,
-            "weight_so_far": weight,
-            "profit_so_far": profit,
-            "upper_bound":   round(ub, 4),
-            "pruned":        pruned,
-            "action":        action,
+            "node_id":            self.node_count,
+            "depth":              index,
+            "item_name":          item_name,
+            "weight_so_far":      weight,
+            "profit_so_far":      profit,
+            "upper_bound":        round(ub, 4),
+            "best_profit_so_far": self.best_profit,   # rekor terbaik SAAT node ini dikunjungi
+            "pruned":             pruned,
+            "is_overweight":      is_overweight,
+            "action":             action,
         })
+
+        if is_overweight:
+            return
 
         if profit > self.best_profit:
             self.best_profit = profit
@@ -78,13 +88,12 @@ class KnapsackSolver:
 
         item = self.items[index]
 
-        # Cabang INCLUDE: ambil item ini bila masih muat di kapasitas.
-        if weight + item.weight <= self.capacity:
-            chosen.append(index)
-            self._backtrack(
-                index + 1, weight + item.weight, profit + item.profit, chosen, action="INCLUDE"
-            )
-            chosen.pop()
+        # Cabang INCLUDE: ambil item ini (pengecekan kapasitas dilakukan di dalam pemanggilan rekursif berikutnya)
+        chosen.append(index)
+        self._backtrack(
+            index + 1, weight + item.weight, profit + item.profit, chosen, action="INCLUDE"
+        )
+        chosen.pop()
 
         # Cabang EXCLUDE: lewati item ini.
         self._backtrack(index + 1, weight, profit, chosen, action="EXCLUDE")
