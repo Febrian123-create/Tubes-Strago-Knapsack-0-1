@@ -105,3 +105,17 @@ class KnapsackCLI:
                 print(f"  [!] Nilai harus minimal {minimum}.")
             except ValueError:
                 print("  [!] Input tidak valid. Masukkan bilangan bulat.")
+if __name__ == "__main__":
+    cli = KnapsackCLI()
+    
+    # 1. Baca input dari terminal
+    items, capacity = cli.read_items_and_capacity()
+    
+    # 2. Inisialisasi Solver dan selesaikan
+    solver = KnapsackSolver(items, capacity)
+    solver.solve()
+    
+    # 3. Tampilkan hasil ke terminal
+    cli.print_sorted_items(solver.items)
+    cli.print_solution(solver)
+    cli.print_statistics(solver)

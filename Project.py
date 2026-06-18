@@ -28,9 +28,6 @@ class Project:
             f"p={self.profit}, w={self.duration} hari)"
         )
 
-
-# Contoh data proyek untuk tombol "Isi Contoh Data" di web.
-# profit dalam satuan juta rupiah, duration dalam hari.
 SAMPLE_PROJECTS = [
     {"name": "Website Toko Online", "profit": 500, "duration": 10},
     {"name": "Aplikasi Mobile Kasir", "profit": 800, "duration": 20},
